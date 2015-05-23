@@ -1,0 +1,28 @@
+{
+  "name": "react-stamp",
+  "version": "0.1.0",
+  "description": "A specialized stampit stamp for React.",
+  "main": "stamp.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/troutowicz/react-stamp.git"
+  },
+  "keywords": [
+    "react",
+    "stamp",
+    "stampit"
+  ],
+  "author": "Tim Routowicz <troutowicz@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/troutowicz/react-stamp/issues"
+  },
+  "homepage": "https://github.com/troutowicz/react-stamp",
+  "peerDependencies": {
+    "react": "^0.13.3",
+    "stampit": "^1.1.0"
+  }
+}
