@@ -3,10 +3,10 @@ A specialized [stampit](https://github.com/ericelliott/stampit) stamp for [React
 
 ### Use
 ```js
-var react = require('react-stamp');
+var reactStamp = require('react-stamp');
 var stampit = require('stampit');
 
-module.exports = stampit.compose(react)
+module.exports = stampit.compose(reactStamp)
   // mixin
   .methods(...)
   // component methods
