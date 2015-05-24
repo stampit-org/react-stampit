@@ -19,11 +19,11 @@ test('stampit(React, {})', (t) => {
   );
 });
 
-test('stampit.compose', (t) => {
+test('stampit().compose', (t) => {
   t.plan(1);
 
   t.equal(
-    typeof stampit.compose,
+    typeof stampit(React, {}).compose,
     'function',
     'should be a function'
   );
@@ -32,7 +32,8 @@ test('stampit.compose', (t) => {
 test('stamp factory without `render` prop', (t) => {
   t.plan(1);
 
-  const stamp = stampit(React, {});
+  const stamp = stampit(React, {})
+    .compose(stampit(React, {}));
 
   t.equal(
     typeof stamp,

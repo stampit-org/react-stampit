@@ -1,11 +1,18 @@
 import stampit from 'stampit';
 
-let factory = (React, props) => {
+const compose = (mixins) => {
+  const stamp = stampit
+    .compose(this, mixins);
+
   // React components must have render method
-  if (!props.render) {
+  if (!stamp.fixed.methods.render) {
     return undefined;
   }
 
+  return stamp;
+};
+
+export default (React, props) => {
   const react = stampit.convertConstructor(React.Component);
 
   let {
@@ -41,13 +48,5 @@ let factory = (React, props) => {
     })
     .methods(methods);
 
-  return stampit.mixIn(stamp, statics);
+  return stampit.mixIn(stamp, statics, { compose });
 };
-
-let compose = (mixins) => {
-  return stampit
-    .compose(this)
-    .methods(mixins);
-};
-
-export default stampit.mixIn(factory, { compose });
