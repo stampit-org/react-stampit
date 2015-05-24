@@ -1,9 +1,15 @@
 [![Build Status](https://travis-ci.org/troutowicz/react-stampit.svg)](https://travis-ci.org/troutowicz/react-stampit)
 
-# react-stamp
-> A specialized [stampit](https://github.com/ericelliott/stampit) stamp for [React](https://github.com/facebook/react).
+# react-stampit
+> A specialized [stampit](https://github.com/ericelliott/stampit) factory for [React](https://github.com/facebook/react).
 
 Work in progress
+
+### Build
+While this library is under development, the build step must be run manually.
+```js
+npm run build
+```
 
 ### Use
 ```js
@@ -14,8 +20,9 @@ export default stampit(React, {
   state: {},
   statics: {},
 
-  // static convenience objects
+  // static convenience props
   contextTypes: {},
+  childContextTypes: {}.
   propTypes: {},
   defaultProps: {},
 

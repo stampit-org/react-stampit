@@ -12,6 +12,7 @@ let factory = (React, props) => {
     state,
     statics,
     contextTypes,
+    childContextTypes,
     propTypes,
     defaultProps,
     /* eslint-disable */
@@ -22,6 +23,9 @@ let factory = (React, props) => {
   statics = statics || {};
   if (contextTypes) {
     statics.contextTypes = contextTypes;
+  }
+  if (childContextTypes) {
+    statics.childContextTypes = childContextTypes;
   }
   if (propTypes) {
     statics.propTypes = propTypes;

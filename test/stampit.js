@@ -29,7 +29,7 @@ test('stampit.compose', (t) => {
   );
 });
 
-test('stamp factory without render method prop', (t) => {
+test('stamp factory without `render` prop', (t) => {
   t.plan(1);
 
   const stamp = stampit(React, {});
@@ -54,7 +54,7 @@ test('stamp instance', (t) => {
   );
 });
 
-test('declared state', (t) => {
+test('declared `state` prop', (t) => {
   t.plan(1);
 
   const stamp = stampit(React, {
@@ -72,7 +72,7 @@ test('declared state', (t) => {
   );
 });
 
-test('declared statics', (t) => {
+test('declared `statics` prop', (t) => {
   t.plan(1);
 
   const stamp = stampit(React, {
@@ -90,7 +90,7 @@ test('declared statics', (t) => {
   );
 });
 
-test('declared contextTypes convenience object', (t) => {
+test('declared `contextTypes` prop', (t) => {
   t.plan(1);
 
   const stamp = stampit(React, {
@@ -106,7 +106,23 @@ test('declared contextTypes convenience object', (t) => {
   );
 });
 
-test('declared propTypes convenience object', (t) => {
+test('declared `childContextTypes` prop', (t) => {
+  t.plan(1);
+
+  const stamp = stampit(React, {
+    childContextTypes: {},
+
+    render() {},
+  });
+
+  t.equal(
+    typeof stamp.childContextTypes,
+    'object',
+    'should exist as stamp factory prop'
+  );
+});
+
+test('declared `propTypes` prop', (t) => {
   t.plan(1);
 
   const stamp = stampit(React, {
@@ -122,7 +138,7 @@ test('declared propTypes convenience object', (t) => {
   );
 });
 
-test('declared defaultProps convenience object', (t) => {
+test('declared `defaultProps` prop', (t) => {
   t.plan(1);
 
   const stamp = stampit(React, {

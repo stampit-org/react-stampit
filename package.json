@@ -2,7 +2,7 @@
   "name": "react-stamp",
   "version": "0.1.0",
   "description": "A specialized stampit factory for React.",
-  "main": "stamp.js",
+  "main": "dist/stampit.js",
   "scripts": {
     "build": "npm run lint && babel src --out-dir dist --stage 1",
     "lint": "eslint src test",
