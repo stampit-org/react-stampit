@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npm run lint && babel src --out-dir dist --stage 1",
     "lint": "eslint src test",
-    "test": "babel-node --stage 1 test/stampit.js"
+    "test": "babel-node --stage 1 node_modules/.bin/tape test/basics.js test/props.js test/compose.js"
   },
   "repository": {
     "type": "git",

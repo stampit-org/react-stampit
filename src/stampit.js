@@ -1,6 +1,10 @@
 import stampit from 'stampit';
 
 export default (React, props) => {
+  if (!React) {
+    return undefined;
+  }
+
   const react = stampit.convertConstructor(React.Component);
 
   let {
