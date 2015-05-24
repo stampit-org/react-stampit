@@ -1,6 +1,6 @@
 import stampit from 'stampit';
 
-export default (React, props) => {
+const rStampit = (React, props) => {
   if (!React) {
     return undefined;
   }
@@ -40,10 +40,19 @@ export default (React, props) => {
     })
     .methods(methods);
 
-  // lockdown factory
+  /**
+   * Lockdown factory
+   */
   delete stamp.methods;
   delete stamp.state;
   delete stamp.enclose;
 
   return stampit.mixIn(stamp, statics);
 };
+
+export default stampit.mixIn(rStampit, {
+  /**
+   * Utility methods to expose
+   */
+  compose: stampit.compose,
+});

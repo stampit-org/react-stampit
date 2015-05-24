@@ -41,17 +41,32 @@ export default stampit(React, {
 
 Return a factory function (called a stamp) that will produce new React components using the prototypes that are passed in or composed.
 
-* `@return {Function} stamp` A factory to produce React components using the given prototypes.
+* `@param {Object} React` The React module.
+* `@param {Object} [props]` A map of property names and values specialized for React.
+* `@return {Function} stamp` A factory to produce React components using the given properties.
 * `@return {Function} stamp.compose` Add mixin (stamp) to stamp. Chainable.
 
 ## The stamp object
 
 ### stamp.compose([arg1] [,arg2] [,arg3...])
 
-Take one or more factories produced from `react-stampit` or `stampit` and
-combine them with `this` to produce and return a new factory object.
+Take one or more stamps produced from `react-stampit` or `stampit` and
+combine them with `this` to produce and return a new stamp.
 Combining overrides properties with last-in priority.
- * @return {Function} A new stampit factory composed from arguments.
+
+* `@param {...Function} stamp` One or more stamps.
+* `@return {Function}` A new stamp composed from `this` and arguments.
+
+## Utility methods
+
+### stampit.compose()
+
+Take two or more stamps produced from `react-stampit` or `stampit` and
+combine them to produce and return a new stamp. Combining overrides
+properties with last-in priority.
+
+* `@param {...Function} stamp` Two or more stamps.
+* `@return {Function}` A new stamp composed from arguments.
 
 ## License
 [![MIT](https://img.shields.io/badge/license-MIT-blue.svg)](http://troutowicz.mit-license.org)

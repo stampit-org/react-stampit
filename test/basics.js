@@ -2,6 +2,7 @@ import React from 'react/addons';
 import test from 'tape';
 
 import stampit from '../src/stampit';
+import coreStampit from 'stampit';
 
 const TestUtils = React.addons.TestUtils;
 
@@ -47,6 +48,16 @@ test('stampit(React, props).compose', (t) => {
 
   t.equal(
     typeof stampit(React, {}).compose,
+    'function',
+    'should be a function'
+  );
+});
+
+test('stampit.compose', (t) => {
+  t.plan(1);
+
+  t.equal(
+    typeof stampit.compose,
     'function',
     'should be a function'
   );
