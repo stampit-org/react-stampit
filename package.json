@@ -1,5 +1,5 @@
 {
-  "name": "react-stamp",
+  "name": "react-stampit",
   "version": "0.1.0",
   "description": "A specialized stampit factory for React.",
   "main": "dist/stampit.js",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/troutowicz/react-stamp.git"
+    "url": "https://github.com/troutowicz/react-stampit.git"
   },
   "keywords": [
     "react",
@@ -20,9 +20,9 @@
   "author": "Tim Routowicz <troutowicz@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/troutowicz/react-stamp/issues"
+    "url": "https://github.com/troutowicz/react-stampit/issues"
   },
-  "homepage": "https://github.com/troutowicz/react-stamp",
+  "homepage": "https://github.com/troutowicz/react-stampit",
   "dependencies": {
     "stampit": "^1.1.0"
   },
