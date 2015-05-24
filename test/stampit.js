@@ -29,19 +29,6 @@ test('stampit().compose', (t) => {
   );
 });
 
-test('stamp factory without `render` prop', (t) => {
-  t.plan(1);
-
-  const stamp = stampit(React, {})
-    .compose(stampit(React, {}));
-
-  t.equal(
-    typeof stamp,
-    'undefined',
-    'should be undefined'
-  );
-});
-
 test('stamp instance', (t) => {
   t.plan(1);
 
