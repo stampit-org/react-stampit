@@ -1,10 +1,12 @@
 {
   "name": "react-stamp",
   "version": "0.1.0",
-  "description": "A specialized stampit stamp for React.",
+  "description": "A specialized stampit factory for React.",
   "main": "stamp.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npm run lint && babel src --out-dir dist --stage 1",
+    "lint": "eslint src test",
+    "test": "babel-node --stage 1 test/stampit.js"
   },
   "repository": {
     "type": "git",
@@ -21,8 +23,14 @@
     "url": "https://github.com/troutowicz/react-stamp/issues"
   },
   "homepage": "https://github.com/troutowicz/react-stamp",
-  "peerDependencies": {
-    "react": "^0.13.3",
+  "dependencies": {
     "stampit": "^1.1.0"
+  },
+  "devDependencies": {
+    "babel": "^5.4.7",
+    "babel-eslint": "^3.1.8",
+    "eslint": "^0.21.2",
+    "react": "^0.13.3",
+    "tape": "^4.0.0"
   }
 }
