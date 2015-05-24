@@ -2,7 +2,6 @@ import React from 'react/addons';
 import test from 'tape';
 
 import stampit from '../src/stampit';
-import coreStampit from 'stampit';
 
 const TestUtils = React.addons.TestUtils;
 

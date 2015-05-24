@@ -3,10 +3,15 @@
   "version": "0.1.0",
   "description": "A specialized stampit factory for React.",
   "main": "dist/stampit.js",
+  "files": [
+    "dist/"
+  ],
   "scripts": {
-    "build": "npm run lint && babel src --out-dir dist --stage 1",
+    "build": "npm run clean && babel src --out-dir dist --stage 1",
+    "clean": "rimraf dist",
     "lint": "eslint src test",
-    "test": "babel-node --stage 1 node_modules/.bin/tape test/basics.js test/props.js test/compose.js"
+    "prepublish": "npm run test && npm run build",
+    "test": "npm run lint && babel-node --stage 1 node_modules/.bin/tape test/basics.js test/props.js test/compose.js"
   },
   "repository": {
     "type": "git",
@@ -31,6 +36,7 @@
     "babel-eslint": "^3.1.8",
     "eslint": "^0.21.2",
     "react": "^0.13.3",
+    "rimraf": "^2.3.4",
     "tape": "^4.0.0"
   }
 }
