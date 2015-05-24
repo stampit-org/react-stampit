@@ -6,14 +6,6 @@
 
 Create React components in a way analogous to `React.createClass`, but powered by [stampit](https://github.com/ericelliott/stampit)'s composable object factories.
 
-## Build
-
-While this library is under development, the build step must be run manually.
-
-```js
-npm run build
-```
-
 ## Use
 
 ```js
