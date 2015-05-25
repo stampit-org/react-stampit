@@ -127,5 +127,9 @@ properties with last-in priority.
 * `@param {...Function} stamp` Two or more stamps.
 * `@return {Function}` A new stamp composed from arguments.
 
+## Issues
+* [childContextTypes](https://github.com/facebook/react/pull/3940)
+* [component testing](https://github.com/facebook/react/pull/3941)
+
 ## License
 [![MIT](https://img.shields.io/badge/license-MIT-blue.svg)](http://troutowicz.mit-license.org)
