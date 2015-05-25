@@ -1,6 +1,41 @@
 import stampit from 'stampit';
 
-const rStampit = (React, props) => {
+const compose = function (...stamps) {
+  let statics = {};
+
+  stamps.forEach((stamp) => {
+    /* eslint-disable */
+    const {
+      create,
+      fixed,
+      compose,
+      ...other
+    } = stamp;
+    /* eslint-enable */
+
+    stampit.mixIn(statics, other);
+  });
+
+  /**
+   * Called by stamp
+   */
+  if (typeof this === 'function') {
+    return stampit.mixIn(
+      stampit.compose(this, ...stamps),
+      statics
+    );
+  }
+
+  /**
+   * Called by stampit
+   */
+  return stampit.mixIn(
+    stampit.compose(...stamps),
+    statics
+  );
+};
+
+const rStampit = function (React, props) {
   if (!React) {
     return undefined;
   }
@@ -36,7 +71,9 @@ const rStampit = (React, props) => {
   let stamp = stampit
     .compose(react)
     .enclose(function () {
-      this.state = state || {};
+      if (state) {
+        this.state = state;
+      }
     })
     .methods(methods);
 
@@ -46,6 +83,7 @@ const rStampit = (React, props) => {
   delete stamp.methods;
   delete stamp.state;
   delete stamp.enclose;
+  stamp.compose = compose;
 
   return stampit.mixIn(stamp, statics);
 };
@@ -54,5 +92,5 @@ export default stampit.mixIn(rStampit, {
   /**
    * Utility methods to expose
    */
-  compose: stampit.compose,
+  compose,
 });

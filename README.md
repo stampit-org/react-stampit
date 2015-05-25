@@ -6,25 +6,92 @@
 
 Create React components in a way analogous to `React.createClass`, but powered by [stampit](https://github.com/ericelliott/stampit)'s composable object factories.
 
+## Install
+
+react-stampit can be [installed via npm](https://www.npmjs.com/package/react-stampit)
+
+```
+npm install react-stampit
+```
+
+or by [downloading the latest release](https://github.com/troutowicz/react-stampit/releases).
+
+## Features
+
+ * Create factory functions (called stamps) which stamp out new React components. All of the new React components inherit all of the prescribed behavior.
+
+ * Compose stamps together to create new stamps. Mixins!
+
 ## Use
 
+Let's start by creating the simplest of React components.
+
 ```js
-import React from 'react';
-import stampit from 'react-stampit';
+const baseComponent = stampit(React, {
+  render() {
+    return this.state;
+  },
+});
+```
 
-export default stampit(React, {
-  state: {},
-  statics: {},
+Maybe we have a need for a reusable util function.
 
-  // static convenience props
-  contextTypes: {},
-  childContextTypes: {}.
-  propTypes: {},
-  defaultProps: {},
+```js
+const utils = stampit(React, {
+  statics: {
+    someUtil() {
+      return 'reusability through composability!';
+    },
+  },
+});
+```
 
-  // lifecycle methods
-  render() {}
-}).compose(stampMixin);
+Now for our final form.
+
+```js
+const component = stampit(React, {
+  /**
+   * state: {},
+   * statics: {},
+   *
+   * contextTypes: {},
+   * childContextTypes: {}.
+   * propTypes: {},
+   * defaultProps: {},
+   *
+   * ...lifecycleMethods
+   */
+
+   state: {
+     foo: 'foo',
+   },
+}).compose(baseComponent, utils);
+```
+
+```js
+test('component().render()', (t) => {
+  t.plan(1);
+
+  t.equal(
+    component().render().foo,
+    'foo',
+    'should be inherited from `baseComponent`'
+  );
+});
+
+>> ok
+
+test('component.someUtil()', (t) => {
+  t.plan(1);
+
+  t.equal(
+    component.someUtil(),
+    'reusability through composability!',
+    'should be inherited from `utils`'
+  );
+});
+
+>> ok
 ```
 
 ## API
@@ -51,7 +118,7 @@ Combining overrides properties with last-in priority.
 
 ## Utility methods
 
-### stampit.compose()
+### stampit.compose([arg1], [arg2] [,arg3...])
 
 Take two or more stamps produced from `react-stampit` or `stampit` and
 combine them to produce and return a new stamp. Combining overrides
