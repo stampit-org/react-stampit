@@ -3,24 +3,6 @@ import test from 'tape';
 
 import stampit from '../src/stampit';
 
-test('stampit(React, { state: obj })()', (t) => {
-  t.plan(1);
-
-  const stamp = stampit(React, {
-    state: {
-      foo: 'foo',
-    },
-
-    render() {},
-  });
-
-  t.equal(
-    stamp().state.foo,
-    'foo',
-    'should return an instance with `state` prop'
-  );
-});
-
 test('stampit(React, { statics: obj })', (t) => {
   t.plan(1);
 
@@ -100,19 +82,5 @@ test('stampit(React, { defaultProps: obj })', (t) => {
     typeof stamp.defaultProps,
     'object',
     'should return a factory with `defaultProps` prop'
-  );
-});
-
-test('stampit(React, { func() {} })()', (t) => {
-  t.plan(1);
-
-  const stamp = stampit(React, {
-    render() {},
-  });
-
-  t.equal(
-    typeof Object.getPrototypeOf(stamp()).render,
-    'function',
-    'should return an instance with `func` as internal proto prop'
   );
 });
