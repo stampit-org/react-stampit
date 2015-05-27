@@ -6,6 +6,8 @@
 
 Create React components in a way analogous to `React.createClass`, but powered by [stampit](https://github.com/ericelliott/stampit)'s composable object factories.
 
+**_This is a work in progress. The factory currently produces React components, but composition implementation is being drafted [in this PR](https://github.com/troutowicz/react-stampit/pull/2). Also check below for React issues that are pending._**
+
 ## Install
 
 react-stampit can be [installed via npm](https://www.npmjs.com/package/react-stampit)
