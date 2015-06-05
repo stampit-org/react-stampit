@@ -10,10 +10,10 @@ test('stampit()', (t) => {
 
   const stamp = stampit();
 
-  t.equal(
-    typeof stamp,
-    'undefined',
-    'should return undefined'
+  t.deepEqual(
+    stamp,
+    {},
+    'should return an empty object'
   );
 });
 
@@ -21,6 +21,30 @@ test('stampit(React, props)', (t) => {
   t.plan(1);
 
   const stamp = stampit(React, {});
+
+  t.equal(
+    typeof stamp,
+    'function',
+    'should return a function'
+  );
+});
+
+test('stampit(React)', (t) => {
+  t.plan(1);
+
+  const stamp = stampit(React);
+
+  t.equal(
+    typeof stamp,
+    'function',
+    'should return a function'
+  );
+});
+
+test('stampit(null, props)', (t) => {
+  t.plan(1);
+
+  const stamp = stampit(null, {});
 
   t.equal(
     typeof stamp,
@@ -62,6 +86,16 @@ test('stampit.compose', (t) => {
   );
 });
 
+test('stampit(React, props).create', (t) => {
+  t.plan(1);
+
+  t.equal(
+    typeof stampit(React, {}).create,
+    'undefined',
+    'should be undefined'
+  );
+});
+
 test('stampit(React, props).methods', (t) => {
   t.plan(1);
 
@@ -87,6 +121,16 @@ test('stampit(React, props).enclose', (t) => {
 
   t.equal(
     typeof stampit(React, {}).enclose,
+    'undefined',
+    'should be undefined'
+  );
+});
+
+test('stampit(React, props).static', (t) => {
+  t.plan(1);
+
+  t.equal(
+    typeof stampit(React, {}).static,
     'undefined',
     'should be undefined'
   );

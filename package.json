@@ -7,11 +7,11 @@
     "dist/"
   ],
   "scripts": {
-    "build": "npm run clean && babel src --out-dir dist --stage 1",
+    "build": "npm run clean && babel src --out-dir dist",
     "clean": "rimraf dist",
     "lint": "eslint src test",
     "prepublish": "npm run test && npm run build",
-    "test": "npm run lint && babel-node --stage 1 node_modules/.bin/tape test/basics.js test/props.js test/compose.js"
+    "test": "npm run lint && babel-node test/test.js"
   },
   "repository": {
     "type": "git",
@@ -29,13 +29,15 @@
   },
   "homepage": "https://github.com/troutowicz/react-stampit",
   "dependencies": {
-    "stampit": "^1.1.0"
+    "lodash": "^3.9.3",
+    "stampit": "^1.2.0"
   },
   "devDependencies": {
     "babel": "^5.4.7",
-    "babel-eslint": "^3.1.8",
-    "eslint": "^0.21.2",
+    "babel-eslint": "^3.1.9",
+    "eslint": "^0.22.1",
     "react": "^0.13.3",
+    "rewire": "^2.3.3",
     "rimraf": "^2.3.4",
     "tape": "^4.0.0"
   }
