@@ -16,8 +16,8 @@ function stripStamp(stamp) {
   return stamp;
 }
 
-const dupeFilter = function (prev, next, key, dest) {
-  if (dest[key]) {
+const dupeFilter = function (prev, next, key, targ) {
+  if (targ[key]) {
     throw new TypeError('Cannot mixin key `' + key + '` because it is provided by multiple sources.');
   }
 
@@ -90,12 +90,11 @@ function wrapFunctions(targ, src) {
  * @param {Object} prev An object of past static properties
  * @return {Object} A processed object of static properties
  */
-function extractStatics(stamp, prev) {
-  let statics = assign({}, prev);
-  const filtered = omit(stamp, ['create', 'fixed', 'compose', 'static']),
-        dupeCheck = ['propTypes', 'defaultProps'];
+function extractStatics(targ, src) {
+  let statics = assign({}, targ);
+  const dupeCheck = ['propTypes', 'defaultProps'];
 
-  forEach(filtered, (val, key) => {
+  forEach(src, (val, key) => {
     if (dupeCheck.indexOf(key) >= 0) {
       statics[key] = assign({}, statics[key], val, dupeFilter);
     } else if (typeof val === 'object') {
@@ -127,7 +126,7 @@ function compose(...factories) {
   let stamps = factories.slice(),
       result = stampit(),
       f = result.fixed,
-      statics = {};
+      statics;
   result.compose = compose;
   f.state = { state: {} };
 
@@ -136,8 +135,6 @@ function compose(...factories) {
   }
 
   forEach(stamps, stamp => {
-    statics = extractStatics(stamp, statics);
-
     if (stamp && stamp.fixed) {
       if (stamp.fixed.methods) {
         f.methods = wrapFunctions(f.methods, stamp.fixed.methods);
@@ -148,10 +145,14 @@ function compose(...factories) {
           f.state.state = assign({}, f.state.state, stamp.fixed.state.state, dupeFilter);
         }
       }
+
+      if (stamp.fixed.static) {
+        statics = extractStatics(statics, stamp.fixed.static);
+      }
     }
   });
 
-  return assign(stripStamp(result), statics);
+  return stripStamp(result.static(statics));
 }
 
 /**
@@ -181,21 +182,18 @@ function rStampit(React, props) {
   );
   const methods = omit(filtered, (val, key) => has(statics, key));
 
-  stamp = stampit
+  stamp = assign(stampit
     .compose(react)
-    .methods(methods);
-  stamp.compose = compose;
+    .methods(methods)
+    .static(statics),
+    { compose }
+  );
 
   if (props.state) {
     stamp.state({ state: props.state });
   }
 
-  return assign(stripStamp(stamp), statics);
+  return stripStamp(stamp);
 }
 
-export default assign(rStampit, {
-  /**
-   * Utility methods to expose
-   */
-  compose,
-});
+export default assign(rStampit, { compose });
