@@ -1,3 +1,4 @@
+import has from 'lodash/object/has';
 import React from 'react';
 import test from 'tape';
 
@@ -8,15 +9,12 @@ test('stampit(React, { state: obj })()', (t) => {
 
   const stamp = stampit(React, {
     state: {
-      foo: 'foo',
+      foo: '',
     },
-
-    render() {},
   });
 
-  t.equal(
-    stamp().state.foo,
-    'foo',
+  t.ok(
+    has(stamp().state, 'foo'),
     'should return an instance with `state` prop'
   );
 });

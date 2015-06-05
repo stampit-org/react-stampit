@@ -1,3 +1,4 @@
+import keys from 'lodash/object/keys';
 import React from 'react';
 import test from 'tape';
 
@@ -7,7 +8,7 @@ test('stampit(React, props).compose(stamp2)', (t) => {
   t.plan(1);
 
   const mixin = stampit(null, {
-    componentDidMount() {
+    method() {
       return 'mixin';
     },
   });
@@ -15,9 +16,8 @@ test('stampit(React, props).compose(stamp2)', (t) => {
   const stamp = stampit(React).compose(mixin);
 
   t.equal(
-    stamp().componentDidMount(),
-    'mixin',
-    'should return a factory composed from `this` and passed args'
+    stamp().method(), 'mixin',
+    'should return a stamp composed of `this` and passed stamps'
   );
 });
 
@@ -25,80 +25,87 @@ test('stampit(React, props).compose(stamp2, stamp3)', (t) => {
   t.plan(2);
 
   const mixin1 = stampit(null, {
-    render() {
+    method() {
       return this.state;
     },
   });
 
   const mixin2 = stampit(null, {
     statics: {
-      someUtil() {
-        return 'reusability through composability!';
+      util() {
+        return 'static';
       },
     },
   });
 
   const stamp = stampit(React, {
     state: {
-      foo: 'foo',
+      foo: '',
     },
   }).compose(mixin1, mixin2);
 
-  t.equal(
-    stamp().render().foo,
-    'foo',
+  t.deepEqual(
+    keys(stamp().method()), ['foo'],
     'should expose `this` to inherited methods'
   );
 
   t.equal(
-    stamp.someUtil(),
-    'reusability through composability!',
+    stamp.util(), 'static',
     'should inherit static methods'
   );
 });
 
-test('stampit.compose(stamp1, stamp2)', (t) => {
+test('stampit.compose(stamp2, stamp1)', (t) => {
   t.plan(1);
 
   const mixin = stampit(null, {
-    render() {
-      return this.state;
-    },
-  });
-  const stamp = stampit(React, {
-    state: {
-      foo: 'foo',
+    method() {
+      return 'mixin';
     },
   });
 
+  const stamp = stampit(React);
+
   t.equal(
-    stampit.compose(stamp, mixin)().render().foo,
-    'foo',
-    'should return a factory composed from args'
+    stampit.compose(mixin, stamp)().method(), 'mixin',
+    'should return a stamp composed of passed stamps'
   );
 });
 
 test('stamps composed of stamps with state', (t) => {
-  t.plan(1);
+  t.plan(2);
 
   const mixin = stampit(null, {
     state: {
-      foo: 'foo',
-      bar: 'bar',
+      foo: ' ',
     },
   });
 
-  const stamp = stampit(React, {})
-    .compose(mixin);
+  const stamp = stampit(React, {
+    state: {
+      bar: ' ',
+    },
+  }).compose(mixin);
 
-  t.ok(
-     stamp().state.foo && stamp().state.bar,
-    'should inherit state overriding with last-in priority'
+  const failStamp = stampit(React, {
+    state: {
+      foo: ' ',
+    },
+  });
+
+  t.deepEqual(
+     stamp().state, { foo: ' ', bar: ' ' },
+    'should inherit state'
+  );
+
+  t.throws(
+    () => failStamp.compose(mixin), TypeError,
+    'should throw on duplicate keys'
   );
 });
 
 test('stamps composed of stamps with React statics', (t) => {
-  t.plan(6);
+  t.plan(8);
 
   const mixin = stampit(null, {
     contextTypes: {
@@ -142,36 +149,56 @@ test('stamps composed of stamps with React statics', (t) => {
     },
   });
 
-  t.ok(
-    stamp.contextTypes.foo && stamp.contextTypes.bar,
+  const okStamp1 = stampit(React, {
+    contextTypes: {
+      foo: React.PropTypes.string,
+    },
+  });
+
+  const okStamp2 = stampit(React, {
+    childContextTypes: {
+      foo: React.PropTypes.string,
+    },
+  });
+
+  t.deepEqual(
+    keys(stamp.contextTypes), ['foo', 'bar'],
     'should inherit `contextTypes` props'
   );
 
-  t.ok(
-    stamp.childContextTypes.foo && stamp.childContextTypes.bar,
+  t.deepEqual(
+    keys(stamp.childContextTypes), ['foo', 'bar'],
     'should inherit `childContextTypes` props'
   );
 
-  t.ok(
-    stamp.propTypes.foo && stamp.propTypes.bar,
+  t.deepEqual(
+    keys(stamp.propTypes), ['foo', 'bar'],
     'should inherit `propTypes` props'
   );
 
-  t.ok(
-    stamp.defaultProps.foo && stamp.defaultProps.bar,
+  t.deepEqual(
+    keys(stamp.defaultProps), ['foo', 'bar'],
     'should inherit `defaultProps` props'
   );
 
   t.throws(
-    () => failStamp1.compose(mixin),
-    TypeError,
+    () => failStamp1.compose(mixin), TypeError,
     'should throw on duplicate keys in `propTypes`'
   );
 
   t.throws(
-    () => failStamp2.compose(mixin),
-    TypeError,
+    () => failStamp2.compose(mixin), TypeError,
     'should throw on duplicate keys in `defaultProps`'
+  );
+
+  t.doesNotThrow(
+    () => okStamp1.compose(mixin),
+    'should not throw on duplicate keys in `contextTypes`'
+  );
+
+  t.doesNotThrow(
+    () => okStamp2.compose(mixin),
+    'should not throw on duplicate keys in `childContextTypes`'
   );
 });
 
@@ -180,11 +207,11 @@ test('stamps composed of stamps with non-React statics', (t) => {
 
   const mixin = stampit(null, {
     statics: {
-      someObj: {
+      obj: {
         foo: 'foo',
-        bar: ' ',
+        bar: '',
       },
-      someFunc() {
+      method() {
         return 'foo';
       },
     },
@@ -192,24 +219,22 @@ test('stamps composed of stamps with non-React statics', (t) => {
 
   const stamp = stampit(React, {
     statics: {
-      someObj: {
+      obj: {
         bar: 'bar',
       },
-      someFunc() {
+      method() {
         return 'bar';
       },
     },
   }).compose(mixin);
 
   t.deepEqual(
-    stamp.someObj,
-    { foo: 'foo', bar: 'bar' },
+    stamp.obj, { foo: 'foo', bar: 'bar' },
     'should inherit static objects overriding props with last-in priority'
   );
 
   t.equal(
-    stamp.someFunc(),
-    'bar',
+    stamp.method(), 'bar',
     'should inherit static methods overriding with last-in priority'
   );
 });
@@ -220,7 +245,7 @@ test('stamps composed of stamps with mixable methods', (t) => {
   const mixin1 = stampit(null, {
     getChildContext() {
       return {
-        foo: 'foo',
+        foo: '',
       };
     },
 
@@ -244,7 +269,7 @@ test('stamps composed of stamps with mixable methods', (t) => {
 
     getChildContext() {
       return {
-        bar: 'bar',
+        bar: '',
       };
     },
 
@@ -257,14 +282,12 @@ test('stamps composed of stamps with mixable methods', (t) => {
   instance.componentDidMount();
 
   t.deepEqual(
-    instance.state,
-    { stamp: true, mixin1: true, mixin2: true },
+    instance.state, { stamp: true, mixin1: true, mixin2: true },
     'should inherit functionality of mixable methods'
   );
 
   t.deepEqual(
-    instance.getChildContext(),
-    { foo: 'foo', bar: 'bar' },
+    keys(instance.getChildContext()), ['foo', 'bar'],
     'should inherit functionality of getChildContext'
   );
 });
@@ -281,8 +304,7 @@ test('stamps composed of stamps with non-mixable methods', (t) => {
   });
 
   t.throws(
-    () => stamp.compose(mixin),
-    TypeError,
+    () => stamp.compose(mixin), TypeError,
     'should throw on duplicate methods'
   );
 });

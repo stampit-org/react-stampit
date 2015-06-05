@@ -1,3 +1,4 @@
+import has from 'lodash/object/has';
 import React from 'react';
 import test from 'tape';
 
@@ -8,16 +9,13 @@ test('stampit(React, { statics: obj })', (t) => {
 
   const stamp = stampit(React, {
     statics: {
-      foo: 'foo',
+      foo: '',
     },
-
-    render() {},
   });
 
-  t.equal(
-    stamp.foo,
-    'foo',
-    'should return a factory with `statics` props as props'
+  t.ok(
+    has(stamp, 'foo'),
+    'should return a stamp with `statics` props as props'
   );
 });
 
@@ -26,14 +24,11 @@ test('stampit(React, { contextTypes: obj })', (t) => {
 
   const stamp = stampit(React, {
     contextTypes: {},
-
-    render() {},
   });
 
-  t.equal(
-    typeof stamp.contextTypes,
-    'object',
-    'should return a factory with `contextTypes` prop'
+  t.ok(
+    has(stamp, 'contextTypes'),
+    'should return a stamp with `contextTypes` prop'
   );
 });
 
@@ -42,14 +37,11 @@ test('stampit(React, { childContextTypes: obj })', (t) => {
 
   const stamp = stampit(React, {
     childContextTypes: {},
-
-    render() {},
   });
 
-  t.equal(
-    typeof stamp.childContextTypes,
-    'object',
-    'should return a factory with `childContextTypes` prop'
+  t.ok(
+    has(stamp, 'childContextTypes'),
+    'should return a stamp with `childContextTypes` prop'
   );
 });
 
@@ -58,14 +50,11 @@ test('stampit(React, { propTypes: obj })', (t) => {
 
   const stamp = stampit(React, {
     propTypes: {},
-
-    render() {},
   });
 
-  t.equal(
-    typeof stamp.propTypes,
-    'object',
-    'should return a factory with `propTypes` prop'
+  t.ok(
+    has(stamp, 'propTypes'),
+    'should return a stamp with `propTypes` prop'
   );
 });
 
@@ -74,13 +63,10 @@ test('stampit(React, { defaultProps: obj })', (t) => {
 
   const stamp = stampit(React, {
     defaultProps: {},
-
-    render() {},
   });
 
-  t.equal(
-    typeof stamp.defaultProps,
-    'object',
-    'should return a factory with `defaultProps` prop'
+  t.ok(
+    has(stamp, 'defaultProps'),
+    'should return a stamp with `defaultProps` prop'
   );
 });

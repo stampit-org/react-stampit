@@ -2,7 +2,6 @@ import assign from 'lodash/object/assign';
 import forEach from 'lodash/collection/forEach';
 import has from 'lodash/object/has';
 import mapValues from 'lodash/object/mapValues';
-import merge from 'lodash/object/merge';
 import omit from 'lodash/object/omit';
 import pick from 'lodash/object/pick';
 import stampit from 'stampit';
@@ -53,21 +52,21 @@ function wrapFunctions(targ, src) {
       switch (mixability[key]) {
         case 'many':
           return function () {
-            const res1 = val.apply(this, arguments);
-            const res2 = targ[key] && targ[key].apply(this, arguments);
+            const res1 = targ[key] && targ[key].apply(this, arguments);
+            const res2 = val.apply(this, arguments);
 
             return res2 || res1;
           };
         case 'many_merged':
           return function () {
-            const res1 = val.apply(this, arguments);
-            const res2 = targ[key] && targ[key].apply(this, arguments);
+            const res1 = targ[key] && targ[key].apply(this, arguments);
+            const res2 = val.apply(this, arguments);
 
-            if (res2) {
+            if (res1) {
               return assign({}, res1, res2, dupeFilter);
             }
 
-            return res1;
+            return res2;
           };
         case 'once':
         default:
@@ -115,14 +114,11 @@ function extractStatics(stamp, prev) {
  * Combining overrides properties with last-in priority.
  *
  * state - concatenative inheritance / cloning
- *   - deep merge
  *
  * statics - concatenative inheritance / cloning
- *   - deep merge React statics
- *   - deep copy non-React statics
  *
  * methods - functional inheritance / closure prototypes
- *   - execute wrapped methods with last-in priority
+ *   - execute wrapped methods with first-in priority
  *
  * @param {...Function} stamp Two or more stamps.
  * @return {Function} A new stamp composed from arguments.
@@ -149,7 +145,7 @@ function compose(...factories) {
 
       if (stamp.fixed.state) {
         if (stamp.fixed.state.state) {
-          f.state.state = merge({}, f.state.state, stamp.fixed.state.state, dupeFilter);
+          f.state.state = assign({}, f.state.state, stamp.fixed.state.state, dupeFilter);
         }
       }
     }
@@ -174,8 +170,8 @@ function rStampit(React, props) {
     react = stampit.convertConstructor(React.Component);
   }
   // shortcut for `convertConstructor`
-  if (!props) {
-    return react;
+  if (!props || Object.keys(props) === 0) {
+    return stripStamp(react);
   }
 
   const filtered = omit(props, ['state', 'statics']);
