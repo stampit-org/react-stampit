@@ -17,7 +17,24 @@ test('stampit(React, props).compose(stamp2)', (t) => {
 
   t.equal(
     stamp().method(), 'mixin',
-    'should return a stamp composed of `this` and passed stamps'
+    'should return a stamp composed of `this` and passed stamp'
+  );
+});
+
+test('stampit(React, props).compose(pojo)', (t) => {
+  t.plan(1);
+
+  const mixin = {
+    method() {
+      return 'mixin';
+    },
+  };
+
+  const stamp = stampit(React).compose(mixin);
+
+  t.equal(
+    stamp().method(), 'mixin',
+    'should return a stamp composed of `this` and passed pojo'
   );
 });
 

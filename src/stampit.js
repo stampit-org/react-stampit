@@ -135,15 +135,19 @@ function compose(...factories) {
   }
 
   forEach(stamps, stamp => {
-    if (stamp && stamp.fixed) {
-      if (stamp.fixed.methods) {
-        f.methods = wrapFunctions(f.methods, stamp.fixed.methods);
-      }
+    if (!stamp.fixed) {
+      /* eslint-disable */
+      stamp = rStampit(null, stamp);
+      /* eslint-enable */
+    }
 
-      if (stamp.fixed.state) {
-        if (stamp.fixed.state.state) {
-          f.state.state = assign({}, f.state.state, stamp.fixed.state.state, dupeFilter);
-        }
+    if (stamp.fixed.methods) {
+      f.methods = wrapFunctions(f.methods, stamp.fixed.methods);
+    }
+
+    if (stamp.fixed.state) {
+      if (stamp.fixed.state.state) {
+        f.state.state = assign({}, f.state.state, stamp.fixed.state.state, dupeFilter);
       }
 
       if (stamp.fixed.static) {
@@ -172,6 +176,7 @@ function rStampit(React, props) {
   }
   // shortcut for `convertConstructor`
   if (!props || Object.keys(props) === 0) {
+    react.compose = compose;
     return stripStamp(react);
   }
 
