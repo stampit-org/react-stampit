@@ -1,4 +1,3 @@
-import keys from 'lodash/object/keys';
 import React from 'react/addons';
 import test from 'tape';
 
@@ -10,8 +9,8 @@ test('stampit()', (t) => {
   t.plan(1);
 
   t.ok(
-    keys(stampit(), ['compose']),
-    'should return an object with compose prop'
+    stampit.isStamp(stampit()),
+    'should return a stamp'
   );
 });
 
@@ -20,9 +19,9 @@ test('stampit(React, props)', (t) => {
 
   const stamp = stampit(React, {});
 
-  t.equal(
-    typeof stamp, 'function',
-    'should return a function'
+  t.ok(
+    stampit.isStamp(stamp),
+    'should return a stamp'
   );
 });
 
@@ -31,9 +30,9 @@ test('stampit(React)', (t) => {
 
   const stamp = stampit(React);
 
-  t.equal(
-    typeof stamp, 'function',
-    'should return a function'
+  t.ok(
+    stampit.isStamp(stamp),
+    'should return a stamp'
   );
 });
 
@@ -42,13 +41,13 @@ test('stampit(null, props)', (t) => {
 
   const stamp = stampit(null, {});
 
-  t.equal(
-    typeof stamp, 'function',
-    'should return a function'
+  t.ok(
+    stampit.isStamp(stamp),
+    'should return a stamp'
   );
 });
 
-test('stampit(React, props)()', (t) => {
+test('stampit(React, { render() })()', (t) => {
   t.plan(1);
 
   const stamp = stampit(React, {

@@ -130,6 +130,10 @@ combine them to produce and return a new stamp.
 * `@param {...Function} stamp` Two or more stamps.
 * `@return {Function}` A new stamp composed from arguments.
 
+### stampit.isStamp(obj)
+
+Take an object and return true if it's a stamp, false otherwise.
+
 ## Pending Issues
 * [x] [childContextTypes](https://github.com/facebook/react/pull/3940)
 * [x] [component testing](https://github.com/facebook/react/pull/3941)

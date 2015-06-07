@@ -6,6 +6,14 @@ import omit from 'lodash/object/omit';
 import pick from 'lodash/object/pick';
 import stampit from 'stampit';
 
+function isStamp(obj) {
+  return (
+    typeof obj === 'function' &&
+    typeof obj.compose === 'function' &&
+    typeof obj.fixed === 'object'
+  );
+}
+
 function stripStamp(stamp) {
   delete stamp.create;
   delete stamp.methods;
@@ -124,31 +132,34 @@ function extractStatics(targ, src) {
  */
 function compose(...factories) {
   let stamps = factories.slice(),
-      result = stampit(),
-      f = result.fixed,
-      statics;
-  result.compose = compose;
-  f.state = { state: {} };
+      state = { state: {} },
+      methods = {},
+      statics = {};
 
-  if (typeof this === 'function') {
+  if (isStamp(this)) {
     stamps.push(this);
   }
 
   forEach(stamps, stamp => {
     /* eslint-disable */
-    stamp = !stamp.fixed ? rStampit(null, stamp) : stamp;
+    stamp = !isStamp(stamp) ? rStampit(null, stamp) : stamp;
     /* eslint-enable */
 
-    f.methods = stamp.fixed.methods && wrapFunctions(f.methods, stamp.fixed.methods);
+    methods = wrapFunctions(methods, stamp.fixed.methods);
+    statics = extractStatics(statics, stamp.fixed.static);
 
     if (stamp.fixed.state && stamp.fixed.state.state) {
-      f.state.state = assign({}, f.state.state, stamp.fixed.state.state, dupeFilter);
+      state.state = assign({}, state.state, stamp.fixed.state.state, dupeFilter);
     }
-
-    statics = stamp.fixed.static && extractStatics(statics, stamp.fixed.static);
   });
 
-  return stripStamp(result.static(statics));
+  return stripStamp(assign(
+    stampit()
+      .state(state)
+      .methods(methods)
+      .static(statics),
+    { compose }
+  ));
 }
 
 /**
@@ -161,11 +172,11 @@ function compose(...factories) {
  * @return {Object} stamp.fixed An object map containing the fixed prototypes.
  */
 function rStampit(React, props) {
-  const react = React ? stampit.convertConstructor(React.Component) : {};
-  let stamp, filtered, statics, methods;
+  let react = React ? stampit.convertConstructor(React.Component) : stampit();
+  let filtered, state, methods, statics;
 
   // shortcut for `convertConstructor`
-  if (!props || Object.keys(props) === 0) {
+  if (typeof props !== 'object' || Object.keys(props) === 0) {
     react.compose = compose;
     return stripStamp(react);
   }
@@ -176,19 +187,15 @@ function rStampit(React, props) {
     pick(filtered, ['contextTypes', 'childContextTypes', 'propTypes', 'defaultProps'])
   );
   methods = omit(filtered, (val, key) => has(statics, key));
+  state = props.state && { state: props.state };
 
-  stamp = assign(stampit
-    .compose(react)
-    .methods(methods)
-    .static(statics),
+  return stripStamp(assign(
+    react
+      .state(state)
+      .methods(methods)
+      .static(statics),
     { compose }
-  );
-
-  if (props.state) {
-    stamp.state({ state: props.state });
-  }
-
-  return stripStamp(stamp);
+  ));
 }
 
-export default assign(rStampit, { compose });
+export default assign(rStampit, { compose, isStamp });
