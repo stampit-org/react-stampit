@@ -135,25 +135,17 @@ function compose(...factories) {
   }
 
   forEach(stamps, stamp => {
-    if (!stamp.fixed) {
-      /* eslint-disable */
-      stamp = rStampit(null, stamp);
-      /* eslint-enable */
+    /* eslint-disable */
+    stamp = !stamp.fixed ? rStampit(null, stamp) : stamp;
+    /* eslint-enable */
+
+    f.methods = stamp.fixed.methods && wrapFunctions(f.methods, stamp.fixed.methods);
+
+    if (stamp.fixed.state && stamp.fixed.state.state) {
+      f.state.state = assign({}, f.state.state, stamp.fixed.state.state, dupeFilter);
     }
 
-    if (stamp.fixed.methods) {
-      f.methods = wrapFunctions(f.methods, stamp.fixed.methods);
-    }
-
-    if (stamp.fixed.state) {
-      if (stamp.fixed.state.state) {
-        f.state.state = assign({}, f.state.state, stamp.fixed.state.state, dupeFilter);
-      }
-
-      if (stamp.fixed.static) {
-        statics = extractStatics(statics, stamp.fixed.static);
-      }
-    }
+    statics = stamp.fixed.static && extractStatics(statics, stamp.fixed.static);
   });
 
   return stripStamp(result.static(statics));
@@ -169,23 +161,21 @@ function compose(...factories) {
  * @return {Object} stamp.fixed An object map containing the fixed prototypes.
  */
 function rStampit(React, props) {
-  let react = {}, stamp;
+  const react = React ? stampit.convertConstructor(React.Component) : {};
+  let stamp, filtered, statics, methods;
 
-  if (React) {
-    react = stampit.convertConstructor(React.Component);
-  }
   // shortcut for `convertConstructor`
   if (!props || Object.keys(props) === 0) {
     react.compose = compose;
     return stripStamp(react);
   }
 
-  const filtered = omit(props, ['state', 'statics']);
-  const statics = assign({},
+  filtered = omit(props, ['state', 'statics']);
+  statics = assign({},
     props.statics,
     pick(filtered, ['contextTypes', 'childContextTypes', 'propTypes', 'defaultProps'])
   );
-  const methods = omit(filtered, (val, key) => has(statics, key));
+  methods = omit(filtered, (val, key) => has(statics, key));
 
   stamp = assign(stampit
     .compose(react)
