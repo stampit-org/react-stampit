@@ -1,3 +1,4 @@
+import keys from 'lodash/object/keys';
 import React from 'react/addons';
 import test from 'tape';
 
@@ -8,9 +9,9 @@ const TestUtils = React.addons.TestUtils;
 test('stampit()', (t) => {
   t.plan(1);
 
-  t.deepEqual(
-    stampit(), {},
-    'should return an empty object'
+  t.ok(
+    keys(stampit(), ['compose']),
+    'should return an object with compose prop'
   );
 });
 
