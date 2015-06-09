@@ -33,48 +33,52 @@ const dupeFilter = function (prev, next, key, targ) {
 };
 
 /**
+ * React specification for creating new components
+ */
+const reactSpec = {
+  propTypes: 'many_merged_dupe',
+  defaultProps: 'many_merged_dupe',
+  contextTypes: 'many_merged',
+  childContextTypes: 'many_merged',
+  getChildContext: 'many_merged_dupe',
+  render: 'once',
+  componentWillMount: 'many',
+  componentDidMount: 'many',
+  componentWillReceiveProps: 'many',
+  shouldComponentUpdate: 'once',
+  componentWillUpdate: 'many',
+  componentDidUpdate: 'many',
+  componentWillUnmount: 'many',
+};
+
+/**
  * Iterate through stamp methods, creating wrapper
- * functions for mixable React methods,
- * starting execution with last-in.
+ * functions for mixable React methods, starting
+ * execution with first-in.
  *
- * @param {Object} dest Method destination
+ * @param {Object} targ Method destination
  * @param {Object} src New methods
  * @return {Object} An object of methods
  */
-function wrapFunctions(targ, src) {
-  let funcs;
-  const mixability = {
-    componentWillMount: 'many',
-    componentDidMount: 'many',
-    componentWillReceiveProps: 'many',
-    componentWillUpdate: 'many',
-    shouldComponentUpdate: 'once',
-    componentDidUpdate: 'many',
-    render: 'once',
-    componentWillUnmount: 'many',
-    getChildContext: 'many_merged',
-  };
+function wrapMethods(targ, src) {
+  let methods;
 
-  funcs = mapValues(src, (val, key) => {
+  methods = mapValues(src, (val, key) => {
     if (typeof val === 'function') {
-      switch (mixability[key]) {
+      switch (reactSpec[key]) {
         case 'many':
           return function () {
-            const res1 = targ[key] && targ[key].apply(this, arguments);
-            const res2 = val.apply(this, arguments);
-
-            return res2 || res1;
+            /* eslint-disable no-unused-expressions */
+            targ[key] && targ[key].apply(this, arguments);
+            val.apply(this, arguments);
+            /* eslint-disable no-unused-expressions */
           };
-        case 'many_merged':
+        case 'many_merged_dupe':
           return function () {
             const res1 = targ[key] && targ[key].apply(this, arguments);
             const res2 = val.apply(this, arguments);
 
-            if (res1) {
-              return assign({}, res1, res2, dupeFilter);
-            }
-
-            return res2;
+            return res1 ? assign(res1, res2, dupeFilter) : res2;
           };
         case 'once':
         default:
@@ -87,7 +91,7 @@ function wrapFunctions(targ, src) {
     }
   });
 
-  return assign({}, targ, funcs);
+  return assign({}, targ, methods);
 }
 
 /**
@@ -100,12 +104,11 @@ function wrapFunctions(targ, src) {
  */
 function extractStatics(targ, src) {
   let statics = assign({}, targ);
-  const dupeCheck = ['propTypes', 'defaultProps'];
 
   forEach(src, (val, key) => {
-    if (dupeCheck.indexOf(key) >= 0) {
+    if (reactSpec[key] === 'many_merged_dupe') {
       statics[key] = assign({}, statics[key], val, dupeFilter);
-    } else if (typeof val === 'object') {
+    } else if (reactSpec[key] === 'many_merged') {
       statics[key] = assign({}, statics[key], val);
     } else {
       statics[key] = val;
@@ -118,14 +121,6 @@ function extractStatics(targ, src) {
 /**
  * Take two or more stamps produced from react-stampit or
  * stampit and combine them to produce and return a new stamp.
- * Combining overrides properties with last-in priority.
- *
- * state - concatenative inheritance / cloning
- *
- * statics - concatenative inheritance / cloning
- *
- * methods - functional inheritance / closure prototypes
- *   - execute wrapped methods with first-in priority
  *
  * @param {...Function} stamp Two or more stamps.
  * @return {Function} A new stamp composed from arguments.
@@ -141,15 +136,13 @@ function compose(...factories) {
   }
 
   forEach(stamps, stamp => {
-    /* eslint-disable */
-    stamp = !isStamp(stamp) ? rStampit(null, stamp) : stamp;
-    /* eslint-enable */
+    stamp = !isStamp(stamp) ? rStampit(null, stamp) : stamp; // eslint-disable-line
 
-    methods = wrapFunctions(methods, stamp.fixed.methods);
+    methods = wrapMethods(methods, stamp.fixed.methods);
     statics = extractStatics(statics, stamp.fixed.static);
 
     if (stamp.fixed.state && stamp.fixed.state.state) {
-      state.state = assign({}, state.state, stamp.fixed.state.state, dupeFilter);
+      assign(state.state, stamp.fixed.state.state, dupeFilter);
     }
   });
 
@@ -177,8 +170,7 @@ function rStampit(React, props) {
 
   // shortcut for `convertConstructor`
   if (typeof props !== 'object' || Object.keys(props) === 0) {
-    react.compose = compose;
-    return stripStamp(react);
+    return stripStamp(assign(react, { compose }));
   }
 
   filtered = omit(props, ['state', 'statics']);

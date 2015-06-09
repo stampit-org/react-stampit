@@ -246,8 +246,8 @@ test('stamps composed of stamps with non-React statics', (t) => {
   }).compose(mixin);
 
   t.deepEqual(
-    stamp.obj, { foo: 'foo', bar: 'bar' },
-    'should inherit static objects overriding props with last-in priority'
+    stamp.obj, { bar: 'bar' },
+    'should inherit static objects overriding with last-in priority'
   );
 
   t.equal(
