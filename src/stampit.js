@@ -7,26 +7,7 @@ import omit from 'lodash/object/omit';
 import pick from 'lodash/object/pick';
 import stampit from 'stampit';
 
-function isStamp(obj) {
-  return (
-    typeof obj === 'function' &&
-    typeof obj.compose === 'function' &&
-    typeof obj.fixed === 'object'
-  );
-}
-
-function stripStamp(stamp) {
-  delete stamp.create;
-  delete stamp.init;
-  delete stamp.methods;
-  delete stamp.state;
-  delete stamp.refs;
-  delete stamp.props;
-  delete stamp.enclose;
-  delete stamp.static;
-
-  return stamp;
-}
+import { isStamp, stripStamp, stamp } from './utils';
 
 const dupeFilter = function (prev, next, key, targ) {
   if (targ[key]) {
@@ -133,7 +114,7 @@ function compose(...factories) {
   let stamps = factories.slice(),
       result = stampit.init(),
       refs = { state: {} },
-      methods = {}, statics = {};
+      init = [], methods = {}, statics = {};
 
   if (isStamp(this)) {
     stamps.push(this);
@@ -142,8 +123,9 @@ function compose(...factories) {
   forEach(stamps, stamp => {
     stamp = !isStamp(stamp) ? rStampit(null, stamp) : stamp; // eslint-disable-line
 
+    init = init.concat(stamp.fixed.init);
     methods = wrapMethods(methods, stamp.fixed.methods);
-    statics = extractStatics(statics, stamp.fixed.static);
+    statics = extractStatics(statics, omit(stamp, (val, key) => has(result, key)));
 
     if (stamp.fixed.refs && stamp.fixed.refs.state) {
       assign(refs.state, stamp.fixed.refs.state, dupeFilter);
@@ -151,6 +133,7 @@ function compose(...factories) {
   });
 
   result = result
+    .init(init)
     .refs(refs)
     .methods(methods)
     .static(statics);
@@ -195,3 +178,4 @@ function rStampit(React, props) {
 }
 
 export default assign(rStampit, { compose, isStamp });
+export { stamp, compose };
