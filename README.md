@@ -83,7 +83,7 @@ You may have noticed a few interesting behaviors.
 
 * `this` just works
 
- This is not `React.createClass` magical autobinding. Stamps are regular objects, and behave like it.
+ This is not `React.createClass` magical autobinding. Stamp instances are regular objects.
 * no `call super`
 
  React methods are wrapped during composition, providing functional inheritance. Sweet.
@@ -97,6 +97,8 @@ You may have noticed a few interesting behaviors.
  ```
 
 If you feel limited by `class`, or want a fresh take on `React.createClass`, maybe give react-stampit a try and learn more about what [stampit](https://github.com/ericelliott/stampit) is all about. And please report any issues you encounter!
+
+Read more about react-stampit's composition [here](docs/composition.md).
 
 ## API
 
