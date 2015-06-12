@@ -1,10 +1,10 @@
-[![Build Status](https://travis-ci.org/troutowicz/react-stampit.svg)](https://travis-ci.org/troutowicz/react-stampit)
+[![Build Status](https://travis-ci.org/stampit-org/react-stampit.svg)](https://travis-ci.org/stampit-org/react-stampit)
 
 # react-stampit
 
-> A specialized [stampit](https://github.com/ericelliott/stampit) factory for [React](https://github.com/facebook/react).
+> A specialized [stampit](https://github.com/stampit-org/stampit) factory for [React](https://github.com/facebook/react).
 
-Create React components in a way analogous to `React.createClass`, but powered by [stampit](https://github.com/ericelliott/stampit)'s composable object factories.
+Create React components in a way analogous to `React.createClass`, but powered by [stampit](https://github.com/stampit-org/stampit)'s composable object factories.
 
 ## Install
 
@@ -14,7 +14,7 @@ react-stampit can be [installed via npm](https://www.npmjs.com/package/react-sta
 npm install react-stampit
 ```
 
-or by [downloading the latest release](https://github.com/troutowicz/react-stampit/releases).
+or by [downloading the latest release](https://github.com/stampit-org/react-stampit/releases).
 
 ## What is this
 
@@ -96,7 +96,7 @@ You may have noticed a few interesting behaviors.
  });
  ```
 
-If you feel limited by `class`, or want a fresh take on `React.createClass`, maybe give react-stampit a try and learn more about what [stampit](https://github.com/ericelliott/stampit) is all about. And please report any issues you encounter!
+If you feel limited by `class`, or want a fresh take on `React.createClass`, maybe give react-stampit a try and learn more about what [stampit](https://github.com/stampit-org/stampit) is all about. And please report any issues you encounter!
 
 Read more about react-stampit's composition [here](docs/composition.md).
 
