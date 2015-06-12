@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/troutowicz/react-stampit.git"
+    "url": "https://github.com/stampit-org/react-stampit.git"
   },
   "keywords": [
     "react",
@@ -25,9 +25,9 @@
   "author": "Tim Routowicz <troutowicz@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/troutowicz/react-stampit/issues"
+    "url": "https://github.com/stampit-org/react-stampit/issues"
   },
-  "homepage": "https://github.com/troutowicz/react-stampit",
+  "homepage": "https://github.com/stampit-org/react-stampit",
   "dependencies": {
     "lodash": "^3.9.3",
     "stampit": "^1.2.0"
