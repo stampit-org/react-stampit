@@ -87,6 +87,15 @@ test('stampit(React, props).create', (t) => {
   );
 });
 
+test('stampit(React, props).init', (t) => {
+  t.plan(1);
+
+  t.equal(
+    typeof stampit(React).init, 'undefined',
+    'should be undefined'
+  );
+});
+
 test('stampit(React, props).methods', (t) => {
   t.plan(1);
 
@@ -101,6 +110,24 @@ test('stampit(React, props).state', (t) => {
 
   t.equal(
     typeof stampit(React).state, 'undefined',
+    'should be undefined'
+  );
+});
+
+test('stampit(React, props).refs', (t) => {
+  t.plan(1);
+
+  t.equal(
+    typeof stampit(React).refs, 'undefined',
+    'should be undefined'
+  );
+});
+
+test('stampit(React, props).props', (t) => {
+  t.plan(1);
+
+  t.equal(
+    typeof stampit(React).props, 'undefined',
     'should be undefined'
   );
 });

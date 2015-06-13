@@ -30,7 +30,7 @@
   "homepage": "https://github.com/stampit-org/react-stampit",
   "dependencies": {
     "lodash": "^3.9.3",
-    "stampit": "^1.2.0"
+    "stampit": "^2.0.3"
   },
   "devDependencies": {
     "babel": "^5.5.6",

@@ -17,8 +17,11 @@ function isStamp(obj) {
 
 function stripStamp(stamp) {
   delete stamp.create;
+  delete stamp.init;
   delete stamp.methods;
   delete stamp.state;
+  delete stamp.refs;
+  delete stamp.props;
   delete stamp.enclose;
   delete stamp.static;
 
@@ -128,12 +131,9 @@ function extractStatics(targ, src) {
  */
 function compose(...factories) {
   let stamps = factories.slice(),
-      result = stampit(),
-      state = { state: {} },
-      methods = {},
-      statics = {};
-
-  result.compose = compose;
+      result = stampit.init(),
+      refs = { state: {} },
+      methods = {}, statics = {};
 
   if (isStamp(this)) {
     stamps.push(this);
@@ -145,16 +145,18 @@ function compose(...factories) {
     methods = wrapMethods(methods, stamp.fixed.methods);
     statics = extractStatics(statics, stamp.fixed.static);
 
-    if (stamp.fixed.state && stamp.fixed.state.state) {
-      assign(state.state, stamp.fixed.state.state, dupeFilter);
+    if (stamp.fixed.refs && stamp.fixed.refs.state) {
+      assign(refs.state, stamp.fixed.refs.state, dupeFilter);
     }
   });
 
-  return stripStamp(result
-    .state(state)
+  result = result
+    .refs(refs)
     .methods(methods)
-    .static(statics)
-  );
+    .static(statics);
+  result.compose = compose;
+
+  return stripStamp(result);
 }
 
 /**
@@ -167,14 +169,13 @@ function compose(...factories) {
  * @return {Object} stamp.fixed An object map containing the fixed prototypes.
  */
 function rStampit(React, props) {
-  let react = React ? stampit.convertConstructor(React.Component) : stampit();
-  let state, methods, statics;
-
-  react.compose = compose;
+  let stamp = React ? stampit.convertConstructor(React.Component) : stampit.init();
+  let refs, methods, statics;
 
   // shortcut for converting React's class to a stamp
   if (isEmpty(props)) {
-    return stripStamp(react);
+    stamp.compose = compose;
+    return stripStamp(stamp);
   }
 
   statics = assign({},
@@ -182,13 +183,15 @@ function rStampit(React, props) {
     pick(props, ['contextTypes', 'childContextTypes', 'propTypes', 'defaultProps'])
   );
   methods = omit(props, (val, key) => has(statics, key) || ['state', 'statics'].indexOf(key) >= 0);
-  state = props.state && { state: props.state };
+  refs = props.state && { state: props.state };
 
-  return stripStamp(react
-    .state(state)
+  stamp = stamp
+    .refs(refs)
     .methods(methods)
-    .static(statics)
-  );
+    .static(statics);
+  stamp.compose = compose;
+
+  return stripStamp(stamp);
 }
 
 export default assign(rStampit, { compose, isStamp });
