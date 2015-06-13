@@ -7,17 +7,19 @@
     "dist/"
   ],
   "scripts": {
-    "build": "npm run clean && babel src --out-dir dist",
+    "build": "npm run clean && babel --stage 1 src --out-dir dist",
     "clean": "rimraf dist",
     "lint": "eslint src test",
     "prepublish": "npm run test && npm run build",
-    "test": "npm run lint && babel-node test/test.js"
+    "test": "npm run lint && babel-node --stage 1 test/test.js"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/stampit-org/react-stampit.git"
   },
   "keywords": [
+    "composability",
+    "mixins",
     "react",
     "stamp",
     "stampit"

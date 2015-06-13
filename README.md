@@ -100,6 +100,8 @@ If you feel limited by `class`, or want a fresh take on `React.createClass`, may
 
 Read more about react-stampit's composition [here](docs/composition.md).
 
+For some advanced use cases, see [here](docs/advanced.md).
+
 ## API
 
 ### stampit(React [,properties])
