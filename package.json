@@ -1,6 +1,6 @@
 {
   "name": "react-stampit",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "A specialized stampit factory for React.",
   "main": "dist/stampit.js",
   "files": [
