@@ -1,4 +1,4 @@
-Stamp composition might be compared to `React.createClass`'s mixin feature. A significant difference is that you compose a stamp without referencing the stamps being inherited from inside the stamp's declaration. 
+Stamp composition might be compared to `React.createClass`'s mixin feature. A significant difference is that you compose a stamp without referencing the stamps being inherited from inside the stamp's declaration.
 
 
 ### State
@@ -16,14 +16,17 @@ const component = stampit(React).compose(mixin);
 ```
 
 ```js
-assert.deepEqual(component().state, { foo: 'foo', bar: 'bar })
+assert.deepEqual(
+  component().state, { foo: 'foo', bar: 'bar },
+  'should inherit state'
+);
   >> ok
 ```
 
 __*`React.createClass` throws an Invariant Violation when duplicate keys are found within mixins. `react-stampit` will throw a TypeError.*__
 
 ### Statics
-Composed stamps inherit other stamps' statics. React statics are merged, throwing on duplicate keys for `propTypes` and `defaultProps`. Non-React statics are deep copied. 
+Composed stamps inherit other stamps' statics. React statics are merged, throwing on duplicate keys for `propTypes` and `defaultProps`. Non-React statics override with last-in priority.
 
 ```js
 const mixin = {
@@ -52,11 +55,20 @@ const component = stampit(React, {
 ```
 
 ```js
-assert.ok(component.propTypes.bar)
+assert.ok(
+  component.propTypes.bar,
+  'should inherit bar propType'
+);
   >> ok
-assert.ok(component.propTypes.foo)
+assert.ok(
+  component.propTypes.foo,
+  'should inherit foo propType'
+);
   >> ok
-assert.deepEqual(component.someStatic, { foo: 'foo' })
+assert.deepEqual(
+  component.someStatic, { foo: 'foo' },
+  'should override non-React statics'
+);
   >> ok
 ```
 
@@ -103,7 +115,10 @@ instance.componentDidMount();
 ```
 
 ```js
-assert.deepEqual(instance.state, { component: true, mixin: true });
+assert.deepEqual(
+  instance.state, { component: true, mixin: true },
+  'should inherit functionality of mixable methods'
+);
   >> ok
 ```
 __*`React.createClass` throws an Invariant Violation when duplicate `shouldComponentUpdate` or `render` methods exist, `react-stampit` will throw a TypeError.*__

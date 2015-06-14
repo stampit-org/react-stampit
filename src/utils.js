@@ -1,4 +1,5 @@
 import assign from 'lodash/object/assign';
+import merge from 'lodash/object/merge';
 import stampit from 'stampit';
 
 import { compose } from './stampit';
@@ -61,7 +62,7 @@ export function getEnum(target) {
  */
 export function stamp(Class) {
   const constructor = function() {
-    assign(this, new Class());
+    merge(this, new Class());
   };
   const methods = assign({},
     Object.getPrototypeOf(Class).prototype,

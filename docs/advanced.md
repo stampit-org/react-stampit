@@ -3,6 +3,9 @@
 For all those nice guys/gals that like `class` and just want some mixability. It is assumed that the component directly extends React.Component, anything else should be inherited via stamp composition.
 
 ```js
+import React from 'react/addons';
+import { stamp } from 'react-stampit';
+
 @stamp
 class Component extends React.Component {
   constructor(props) {
@@ -13,22 +16,38 @@ class Component extends React.Component {
     };
   }
 
-  render() {}
+  render() {
+    return null;
+  }
 }
 
-Component.propTypes = {
-  foo: '',
+Component.defaultProps = {
+  foo: 'foo',
 };
 
 const mixin = {
-  propTypes: {
+  state: {
+    bar: 'bar',
+  },
+
+  defaultProps: {
     bar: 'bar',
   },
 };
 
 Component = Component.compose(mixin);
+```
 
-assert.deepEqual(Component.propTypes, { foo: 'foo', bar: 'bar' });
+```js
+assert.deepEqual(
+  Component().state, { foo: 'foo', bar: 'bar' },
+  'should inherit mixin state'
+);
+  >> ok
+assert.deepEqual(
+  Component.defaultProps, { foo: 'foo', bar: 'bar' }
+  'should inherit `defaultProps` props'
+);
   >> ok
 ```
 
