@@ -41,49 +41,54 @@ The best part about [stamps](https://en.wikipedia.org/wiki/Stamp_%28object-orien
 
 ```js
 const mixin1 = {
-  componentDidMount() {
+  componentWillMount() {
     this.state.mixin1 = true;
   },
 };
 
 const mixin2 = {
-  componentDidMount() {
+  componentWillMount() {
     this.state.mixin2 = true;
   },
 };
 
-const component = stampit(React, {
+const Component = stampit(React, {
   state: {
     comp: false,
     mixin1: false,
     mixin2: false,
   },
 
-  someMethod() {
+  _onClick() {
+    return this.state;
+  },
+
+  componentWillMount() {
     this.state.comp = true;
   },
 
-  componentDidMount() {
-    this.someMethod();
+  render() {
+    return <input type='button' onClick={() => this._onClick()} />;
   },
 }).compose(mixin1, mixin2);
+```
 
-const instance = component();
-instance.componentDidMount();
+```js
+shallowRenderer.render(<Component />);
+const button = shallowRenderer.getRenderOutput();
 
 assert.deepEqual(
-  instance.state,
-  { comp: true, mixin1: true, mixin2: true }
+  button.props.onClick(), { comp: true, mixin1: true, mixin2: true },
+  'should return component state with all truthy props'
 );
-
->> ok
+  >> ok
 ```
 
 You may have noticed a few interesting behaviors.
 
-* `this` just works
+* no autobinding
 
- This is not `React.createClass` magical autobinding. Stamp instances are regular objects.
+ Event handlers require explicit binding. No magic. This can be done using `.bind` or through lexical binding with ES6 [arrow functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions) as shown in the example.
 * no `call super`
 
  React methods are wrapped during composition, providing functional inheritance. Sweet.

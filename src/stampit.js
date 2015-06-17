@@ -110,9 +110,8 @@ function extractStatics(targ, src) {
  * @param {...Function} stamp Two or more stamps.
  * @return {Function} A new stamp composed from arguments.
  */
-function compose(...factories) {
-  let stamps = factories.slice(),
-      result = stampit.init(),
+function compose(...stamps) {
+  let result = stampit(),
       refs = { state: {} },
       init = [], methods = {}, statics = {};
 
@@ -152,7 +151,7 @@ function compose(...factories) {
  * @return {Object} stamp.fixed An object map containing the fixed prototypes.
  */
 function rStampit(React, props) {
-  let stamp = React ? stampit.convertConstructor(React.Component) : stampit.init();
+  let stamp = React ? stampit.convertConstructor(React.Component) : stampit();
   let refs, methods, statics;
 
   // shortcut for converting React's class to a stamp
