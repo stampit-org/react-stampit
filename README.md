@@ -143,6 +143,9 @@ combine them to produce and return a new stamp.
 
 Take an object and return true if it's a stamp, false otherwise.
 
+## Examples
+* [react-hello](https://github.com/stampit-org/react-hello)
+
 ## Pending Issues
 * [x] [childContextTypes](https://github.com/facebook/react/pull/3940)
 * [x] [component testing](https://github.com/facebook/react/pull/3941)
