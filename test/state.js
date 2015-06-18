@@ -4,14 +4,15 @@ import test from 'tape';
 
 import stampit from '../src/stampit';
 
-test('stampit(React, { state: obj })()', (t) => {
+test('stampit({ state: obj })(React)()', (t) => {
   t.plan(1);
 
-  const stamp = stampit(React, {
+  const stampFactory = stampit({
     state: {
       foo: '',
     },
   });
+  const stamp = stampFactory(React);
 
   t.ok(
     has(stamp().state, 'foo'),
