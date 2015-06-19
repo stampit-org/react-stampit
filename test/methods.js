@@ -3,12 +3,13 @@ import test from 'tape';
 
 import stampit from '../src/stampit';
 
-test('stampit(React, { method() {} })()', (t) => {
+test('stampit({ method() {} })(React)()', (t) => {
   t.plan(1);
 
-  const stamp = stampit(React, {
+  const stampFactory = stampit({
     render() {},
   });
+  const stamp = stampFactory(React);
 
   t.equal(
     typeof Object.getPrototypeOf(stamp()).render, 'function',

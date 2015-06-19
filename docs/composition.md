@@ -12,7 +12,8 @@ const mixin = {
   },
 };
 
-const component = stampit(React).compose(mixin);
+const componentFactory = stampit();
+const component = componentFactory(React).compose(mixin);
 ```
 
 ```js
@@ -41,7 +42,7 @@ const mixin = {
   },
 };
 
-const component = stampit(React, {
+const componentFactory = stampit({
   statics: {
     someStatic: {
       foo: 'foo',
@@ -51,7 +52,8 @@ const component = stampit(React, {
   propTypes: {
     foo: React.PropTypes.string,
   },
-}).compose(mixin);
+});
+const component = componentFactory(React).compose(mixin);
 ```
 
 ```js
@@ -99,7 +101,7 @@ const mixin = {
   },
 };
 
-const component = stampit(React, {
+const componentFactory = stampit({
   state: {
     component: false,
     mixin: false,
@@ -108,7 +110,8 @@ const component = stampit(React, {
   componentDidMount() {
     this.state.component = true;
   }
-}).compose(mixin);
+});
+const component = componentFactory(React).compose(mixin);
 
 const instance = component();
 instance.componentDidMount();

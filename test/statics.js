@@ -4,14 +4,15 @@ import test from 'tape';
 
 import stampit from '../src/stampit';
 
-test('stampit(React, { statics: obj })', (t) => {
+test('stampit({ statics: obj })(React)', (t) => {
   t.plan(1);
 
-  const stamp = stampit(React, {
+  const stampFactory = stampit({
     statics: {
       foo: '',
     },
   });
+  const stamp = stampFactory(React);
 
   t.ok(
     has(stamp, 'foo'),
@@ -19,12 +20,13 @@ test('stampit(React, { statics: obj })', (t) => {
   );
 });
 
-test('stampit(React, { contextTypes: obj })', (t) => {
+test('stampit({ contextTypes: obj })(React)', (t) => {
   t.plan(1);
 
-  const stamp = stampit(React, {
+  const stampFactory = stampit({
     contextTypes: {},
   });
+  const stamp = stampFactory(React);
 
   t.ok(
     has(stamp, 'contextTypes'),
@@ -32,12 +34,13 @@ test('stampit(React, { contextTypes: obj })', (t) => {
   );
 });
 
-test('stampit(React, { childContextTypes: obj })', (t) => {
+test('stampit({ childContextTypes: obj })(React)', (t) => {
   t.plan(1);
 
-  const stamp = stampit(React, {
+  const stampFactory = stampit({
     childContextTypes: {},
   });
+  const stamp = stampFactory(React);
 
   t.ok(
     has(stamp, 'childContextTypes'),
@@ -45,12 +48,13 @@ test('stampit(React, { childContextTypes: obj })', (t) => {
   );
 });
 
-test('stampit(React, { propTypes: obj })', (t) => {
+test('stampit({ propTypes: obj })(React)', (t) => {
   t.plan(1);
 
-  const stamp = stampit(React, {
+  const stampFactory = stampit({
     propTypes: {},
   });
+  const stamp = stampFactory(React);
 
   t.ok(
     has(stamp, 'propTypes'),
@@ -58,12 +62,13 @@ test('stampit(React, { propTypes: obj })', (t) => {
   );
 });
 
-test('stampit(React, { defaultProps: obj })', (t) => {
+test('stampit({ defaultProps: obj })(React)', (t) => {
   t.plan(1);
 
-  const stamp = stampit(React, {
+  const stampFactory = stampit({
     defaultProps: {},
   });
+  const stamp = stampFactory(React);
 
   t.ok(
     has(stamp, 'defaultProps'),

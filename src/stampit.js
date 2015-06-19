@@ -120,7 +120,7 @@ function compose(...stamps) {
   }
 
   forEach(stamps, stamp => {
-    stamp = !isStamp(stamp) ? rStampit(null, stamp) : stamp; // eslint-disable-line
+    stamp = !isStamp(stamp) ? rStampit(stamp)() : stamp; // eslint-disable-line
 
     init = init.concat(stamp.fixed.init);
     methods = wrapMethods(methods, stamp.fixed.methods);
@@ -150,30 +150,32 @@ function compose(...stamps) {
  * @return {Function} stamp A factory to produce React components using the given properties.
  * @return {Object} stamp.fixed An object map containing the fixed prototypes.
  */
-function rStampit(React, props) {
-  let stamp = React ? stampit.convertConstructor(React.Component) : stampit();
-  let refs, methods, statics;
+function rStampit(props) {
+  return React => {
+    let stamp = React ? stampit.convertConstructor(React.Component) : stampit();
+    let refs, methods, statics;
 
-  // shortcut for converting React's class to a stamp
-  if (isEmpty(props)) {
+    // shortcut for converting React's class to a stamp
+    if (isEmpty(props)) {
+      stamp.compose = compose;
+      return stripStamp(stamp);
+    }
+
+    statics = assign({},
+      props.statics,
+      pick(props, ['contextTypes', 'childContextTypes', 'propTypes', 'defaultProps'])
+    );
+    methods = omit(props, (val, key) => has(statics, key) || ['state', 'statics'].indexOf(key) >= 0);
+    refs = props.state && { state: props.state };
+
+    stamp = stamp
+      .refs(refs)
+      .methods(methods)
+      .static(statics);
     stamp.compose = compose;
+
     return stripStamp(stamp);
-  }
-
-  statics = assign({},
-    props.statics,
-    pick(props, ['contextTypes', 'childContextTypes', 'propTypes', 'defaultProps'])
-  );
-  methods = omit(props, (val, key) => has(statics, key) || ['state', 'statics'].indexOf(key) >= 0);
-  refs = props.state && { state: props.state };
-
-  stamp = stamp
-    .refs(refs)
-    .methods(methods)
-    .static(statics);
-  stamp.compose = compose;
-
-  return stripStamp(stamp);
+  };
 }
 
 export default assign(rStampit, { compose, isStamp });
