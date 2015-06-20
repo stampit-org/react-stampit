@@ -39,20 +39,32 @@ const component = stampit(React, {
 
 The best part about [stamps](https://en.wikipedia.org/wiki/Stamp_%28object-oriented_programming%29) is their composability. What this means is that `n` number of stamps can be combined into a new stamp which inherits each passed stamp's behavior. This is perfect for React, since `class` is being pushed as the new norm and does not provide an idiomatic way to use mixins. (classical inheritance :disappointed:). While stamp composability on the surface is not idiomatic, the conventions used underneath are; it is these conventions that provide a limitless way to extend any React component.
 
+__mixin1.jsx__
+
 ```js
-const mixin1 = {
+export default {
   componentWillMount() {
     this.state.mixin1 = true;
   },
 };
+```
 
-const mixin2 = {
+__mixin2.jsx__
+
+```js
+export default {
   componentWillMount() {
     this.state.mixin2 = true;
   },
 };
+```
 
-const Component = stampit(React, {
+__component.jsx__
+
+```js
+import stampit from 'react-stampit';
+
+export default React => stampit(React, {
   state: {
     comp: false,
     mixin1: false,
@@ -70,7 +82,23 @@ const Component = stampit(React, {
   render() {
     return <input type='button' onClick={() => this._onClick()} />;
   },
-}).compose(mixin1, mixin2);
+});
+```
+
+__app.jsx__
+
+```js
+import React from 'react';
+
+import componentFactory from './component';
+import mixin1 from './mixin1';
+import mixin2 from './mixin2';
+
+const Component = componentFactory(React).compose(mixin1, mixin2);
+
+/**
+ * Do things
+ */
 ```
 
 ```js
@@ -85,6 +113,10 @@ assert.deepEqual(
 ```
 
 You may have noticed a few interesting behaviors.
+
+* component is a factory
+
+ By using dependency injection for the React library, we are able to avoid problems caused by multiple instances of React. Read more about that [here](https://medium.com/@dan_abramov/two-weird-tricks-that-fix-react-7cf9bbdef375). This pattern is optional, but recommended.
 
 * no autobinding
 
@@ -109,7 +141,7 @@ For some advanced use cases, see [here](docs/advanced.md).
 
 ## API
 
-### stampit(React [,properties])
+### stampit(React [,props])
 
 Return a factory function (called a stamp) that will produce new React components using the prototypes that are passed in or composed.
 
