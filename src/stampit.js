@@ -9,6 +9,11 @@ import stampit from 'stampit';
 
 import { isStamp, stripStamp, stamp } from './utils';
 
+/*
+ * Memoize stamps that possess a unique displayName prop
+ */
+let cache = {};
+
 const dupeFilter = function (prev, next, key, targ) {
   if (targ[key]) {
     throw new TypeError('Cannot mixin key `' + key + '` because it is provided by multiple sources.');
@@ -152,7 +157,7 @@ function compose(...stamps) {
  */
 function rStampit(React, props) {
   let stamp = React ? stampit.convertConstructor(React.Component) : stampit();
-  let refs, methods, statics;
+  let displayName, refs, methods, statics;
 
   // shortcut for converting React's class to a stamp
   if (isEmpty(props)) {
@@ -160,12 +165,19 @@ function rStampit(React, props) {
     return stripStamp(stamp);
   }
 
+  displayName = props.displayName || 'ReactStamp';
+
   statics = assign({},
     props.statics,
-    pick(props, ['contextTypes', 'childContextTypes', 'propTypes', 'defaultProps'])
+    pick(props, ['contextTypes', 'childContextTypes', 'propTypes', 'defaultProps']),
+    { displayName }
   );
   methods = omit(props, (val, key) => has(statics, key) || ['state', 'statics'].indexOf(key) >= 0);
   refs = props.state && { state: props.state };
+
+  if (displayName !== 'ReactStamp' && cache[displayName]) {
+    return cache[displayName];
+  }
 
   stamp = stamp
     .refs(refs)
@@ -173,7 +185,7 @@ function rStampit(React, props) {
     .static(statics);
   stamp.compose = compose;
 
-  return stripStamp(stamp);
+  return displayName !== 'ReactStamp' ? cache[displayName] = stripStamp(stamp) : stripStamp(stamp);
 }
 
 export default assign(rStampit, { compose, isStamp });

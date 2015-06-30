@@ -19,6 +19,19 @@ test('stampit(React, { statics: obj })', (t) => {
   );
 });
 
+test('stampit(React, { displayName: str })', (t) => {
+  t.plan(1);
+
+  const stamp = stampit(React, {
+    displayName: 'stamp',
+  });
+
+  t.ok(
+    has(stamp, 'displayName'),
+    'should return a stamp with `displayName` prop'
+  );
+});
+
 test('stampit(React, { contextTypes: obj })', (t) => {
   t.plan(1);
 
