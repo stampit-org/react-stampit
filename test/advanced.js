@@ -48,6 +48,32 @@ test('stamp decorator', (t) => {
     keys(Component.compose(mixin).defaultProps), ['bar', 'foo'],
     'merges statics'
   );
-
   /* eslint-enable new-cap */
+});
+
+test('stamp factory', (t) => {
+  t.plan(2);
+
+  const stampFactory1 = React => stampit(React, {
+    displayName: 'Component',
+  });
+
+  const stampFactory2 = React => stampit(React, {
+    displayName: 'ReactStamp',
+  });
+
+  const stamp1 = stampFactory1(React);
+  const stamp2 = stampFactory1(React);
+  const stamp3 = stampFactory2(React);
+  const stamp4 = stampFactory2(React);
+
+  t.equal(
+    stamp1, stamp2,
+    'memoizes stamp when displayName prop !== \'ReactStamp\''
+  );
+
+  t.notEqual(
+    stamp3, stamp4,
+    'does not memoize stamp when displayName prop == \'ReactStamp\''
+  );
 });

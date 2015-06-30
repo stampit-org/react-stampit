@@ -65,6 +65,8 @@ __component.jsx__
 import stampit from 'react-stampit';
 
 export default React => stampit(React, {
+  displayName: 'Component',
+
   state: {
     comp: false,
     mixin1: false,
