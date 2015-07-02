@@ -52,7 +52,7 @@ test('stamp decorator', (t) => {
 });
 
 test('stamp factory', (t) => {
-  t.plan(2);
+  t.plan(4);
 
   const stampFactory1 = React => stampit(React, {
     displayName: 'Component',
@@ -66,14 +66,28 @@ test('stamp factory', (t) => {
   const stamp2 = stampFactory1(React);
   const stamp3 = stampFactory2(React);
   const stamp4 = stampFactory2(React);
+  const composedStamp1 = stampit.compose(stamp1, { displayName: 'ComposedStamp1' });
+  const composedStamp2 = stampit.compose(stamp1, { displayName: 'ComposedStamp1' });
+  const composedStamp3 = stampit.compose(stamp1, { displayName: 'ReactStamp' });
+  const composedStamp4 = stampit.compose(stamp1, { displayName: 'ReactStamp' });
 
   t.equal(
     stamp1, stamp2,
-    'memoizes stamp when displayName prop !== \'ReactStamp\''
+    'is memoized when displayName prop !== \'ReactStamp\''
   );
 
   t.notEqual(
     stamp3, stamp4,
-    'does not memoize stamp when displayName prop == \'ReactStamp\''
+    'is not memoized when displayName prop == \'ReactStamp\''
+  );
+
+  t.equal(
+    composedStamp1, composedStamp2,
+    'is memoized in composition when displayName prop !== \'ReactStamp\''
+  );
+
+  t.notEqual(
+    composedStamp3, composedStamp4,
+    'is not memoized in composition when displayName prop == \'ReactStamp\''
   );
 });
