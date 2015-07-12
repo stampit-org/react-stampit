@@ -1,7 +1,7 @@
 import rewire from 'rewire';
 import test from 'tape';
 
-let stampit = rewire('../src/stampit');
+let stampit = rewire('../src');
 let wrapMethods = stampit.__get__('wrapMethods');
 
 test('wrapMethods(targ, src)', (t) => {

@@ -2,16 +2,19 @@
   "name": "react-stampit",
   "version": "0.6.1",
   "description": "A specialized stampit factory for React.",
-  "main": "dist/stampit.js",
+  "main": "lib",
   "files": [
-    "dist/"
+    "dist",
+    "lib"
   ],
   "scripts": {
-    "build": "npm run clean && babel --stage 1 src --out-dir dist",
-    "clean": "rimraf dist",
+    "build": "npm run clean && npm run transpile && npm run build-browser",
+    "build-browser": "webpack && MINIFY=1 webpack -p",
+    "clean": "rimraf lib",
     "lint": "eslint src test",
     "prepublish": "npm run test && npm run build",
-    "test": "npm run lint && babel-node --stage 1 test/test.js"
+    "test": "npm run lint && babel-node --stage 1 test/test.js",
+    "transpile": "babel --stage 1 src --out-dir lib"
   },
   "repository": {
     "type": "git",
@@ -36,11 +39,15 @@
   },
   "devDependencies": {
     "babel": "^5.6.14",
+    "babel-core": "^5.6.15",
     "babel-eslint": "^3.1.20",
+    "babel-loader": "^5.3.1",
     "eslint": "^0.24.0",
+    "node-libs-browser": "^0.5.2",
     "react": "^0.13.3",
     "rewire": "^2.3.4",
     "rimraf": "^2.4.1",
-    "tape": "^4.0.0"
+    "tape": "^4.0.0",
+    "webpack": "^1.10.1"
   }
 }

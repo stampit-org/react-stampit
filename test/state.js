@@ -2,7 +2,7 @@ import has from 'lodash/object/has';
 import React from 'react';
 import test from 'tape';
 
-import stampit from '../src/stampit';
+import stampit from '../src';
 
 test('stampit(React, { state: obj })()', (t) => {
   t.plan(1);

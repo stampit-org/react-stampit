@@ -1,7 +1,7 @@
 import React from 'react';
 import test from 'tape';
 
-import stampit from '../src/stampit';
+import stampit from '../src';
 
 test('stampit(React, { method() {} })()', (t) => {
   t.plan(1);

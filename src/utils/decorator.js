@@ -2,33 +2,13 @@ import assign from 'lodash/object/assign';
 import merge from 'lodash/object/merge';
 import stampit from 'stampit';
 
-import { compose } from './stampit';
-
-export function isStamp(obj) {
-  return (
-    typeof obj === 'function' &&
-    typeof obj.compose === 'function' &&
-    typeof obj.fixed === 'object'
-  );
-}
-
-export function stripStamp(stamp) {
-  delete stamp.create;
-  delete stamp.init;
-  delete stamp.methods;
-  delete stamp.state;
-  delete stamp.refs;
-  delete stamp.props;
-  delete stamp.enclose;
-  delete stamp.static;
-
-  return stamp;
-}
+import { compose } from '../';
+import { stripStamp } from './';
 
 /**
  * Get object of non-enum properties
  */
-export function getNonEnum(target) {
+function getNonEnum(target) {
   const props = Object.getOwnPropertyNames(target);
   const enumOnly = Object.keys(target);
   let obj = {};
@@ -46,7 +26,7 @@ export function getNonEnum(target) {
 /**
  * Get object of enum properties
  */
-export function getEnum(target) {
+function getEnum(target) {
   const props = Object.keys(target);
   let obj = {};
 
@@ -60,7 +40,7 @@ export function getEnum(target) {
 /**
  * ES7 decorator for converting ES6 class to stamp
  */
-export function stamp(Class) {
+export default function stamp(Class) {
   const constructor = function() {
     merge(this, new Class());
   };

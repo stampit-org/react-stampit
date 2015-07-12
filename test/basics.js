@@ -1,7 +1,7 @@
 import React from 'react/addons';
 import test from 'tape';
 
-import stampit from '../src/stampit';
+import stampit from '../src';
 
 const TestUtils = React.addons.TestUtils;
 

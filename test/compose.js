@@ -2,7 +2,7 @@ import keys from 'lodash/object/keys';
 import React from 'react';
 import test from 'tape';
 
-import stampit from '../src/stampit';
+import stampit from '../src';
 
 test('stampit(React, props).compose(stamp2)', (t) => {
   t.plan(1);

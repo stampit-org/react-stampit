@@ -2,8 +2,8 @@ import keys from 'lodash/object/keys';
 import React from 'react';
 import test from 'tape';
 
-import stampit from '../src/stampit';
-import { stamp } from '../src/stampit';
+import stampit from '../src';
+import stamp from '../src/utils/decorator';
 
 test('stamp decorator', (t) => {
   t.plan(4);
