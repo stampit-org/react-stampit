@@ -4,7 +4,7 @@ For all those nice guys/gals that like `class` and just want some mixability. It
 
 ```js
 import React from 'react/addons';
-import { stamp } from 'react-stampit';
+import stamp from 'react-stampit/utils/decorator';
 
 @stamp
 class Component extends React.Component {

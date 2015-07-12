@@ -7,8 +7,13 @@ import omit from 'lodash/object/omit';
 import pick from 'lodash/object/pick';
 import stampit from 'stampit';
 
-import { isStamp, stripStamp, stamp } from './utils';
-import { isStampCached, cacheStamp, getCachedStamp } from './cache';
+import {
+  isStamp,
+  stripStamp,
+  isStampCached,
+  cacheStamp,
+  getCachedStamp,
+} from './utils';
 
 const dupeFilter = function (prev, next, key, targ) {
   if (targ[key]) {
@@ -192,4 +197,3 @@ function rStampit(React, props) {
 }
 
 export default assign(rStampit, { compose, isStamp });
-export { stamp, compose };
