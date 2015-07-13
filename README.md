@@ -4,7 +4,7 @@
 
 > A specialized [stampit](https://github.com/stampit-org/stampit) factory for [React](https://github.com/facebook/react).
 
-Create React components in a way analogous to `React.createClass`, but powered by [stampit](https://github.com/stampit-org/stampit)'s composable object factories.
+Create React components in a way analogous to `React.createClass`, but powered by a [subset](#api-differences) of the [stampit](https://github.com/stampit-org/stampit) API.
 
 ## Install
 
@@ -176,6 +176,18 @@ combine them to produce and return a new stamp.
 ### stampit.isStamp(obj)
 
 Take an object and return true if it's a stamp, false otherwise.
+
+## API Differences
+
+react-stampit removes the following methods available in [stampit](https://github.com/stampit-org/stampit) core to enforce an API familiar to React:
+
+* init
+* props
+* refs
+* methods
+* statics
+
+Users are encouraged to utilize [React's lifecycle](https://facebook.github.io/react/docs/component-specs.html) and [component properties](#what-is-this) as replacements for these methods.
 
 ## Examples
 * [react-hello](https://github.com/stampit-org/react-hello)
