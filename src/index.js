@@ -9,10 +9,7 @@ import stampit from 'stampit';
 
 import {
   isStamp,
-  stripStamp,
-  isStampCached,
-  cacheStamp,
-  getCachedStamp,
+  stripStamp
 } from './utils';
 
 const dupeFilter = function (prev, next, key, targ) {
@@ -119,18 +116,9 @@ function extractStatics(targ, src) {
 function compose(...stamps) {
   let result = stampit(),
       refs = { state: {} },
-      init = [], methods = {}, statics = {},
-      displayName;
+      init = [], methods = {}, statics = {};
 
   if (isStamp(this)) stamps.push(this);
-
-  /*
-   * If stamp has unique displayName and is cached, return it. A composed stamp
-   * should have a unique displayName. Since the compose method overrides with last-in
-   * priority, the expected displayName should be at the end of the chain.
-   */
-  forEach(stamps, stamp => displayName = stamp.displayName || displayName);
-  if (isStampCached(displayName)) return getCachedStamp(displayName);
 
   forEach(stamps, stamp => {
     stamp = !isStamp(stamp) ? rStampit(null, stamp) : stamp; // eslint-disable-line
@@ -151,8 +139,7 @@ function compose(...stamps) {
     .static(statics);
   result.compose = compose;
 
-  // If stamp has unique displayName, cache it.
-  return cacheStamp(stripStamp(result));
+  return stripStamp(result);
 }
 
 /**
@@ -174,9 +161,7 @@ function rStampit(React, props) {
     return stripStamp(stamp);
   }
 
-  // If stamp has unique displayName and is cached, return it.
   displayName = props.displayName || 'ReactStamp';
-  if (isStampCached(displayName)) return getCachedStamp(displayName);
 
   statics = assign({},
     props.statics,
@@ -192,8 +177,7 @@ function rStampit(React, props) {
     .static(statics);
   stamp.compose = compose;
 
-  // If stamp has unique displayName, cache it.
-  return cacheStamp(stripStamp(stamp));
+  return stripStamp(stamp);
 }
 
 export default assign(rStampit, { compose, isStamp });

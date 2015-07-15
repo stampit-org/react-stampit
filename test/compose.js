@@ -30,7 +30,7 @@ test('stampit(React, props).compose(pojo)', (t) => {
     },
   };
 
-  const stamp = stampit(React).compose(mixin);
+  const stamp = stampit(React, { displayName: 'fooComp' }).compose(mixin);
 
   t.equal(
     stamp().method(), 'mixin',
@@ -325,4 +325,3 @@ test('stamps composed of stamps with non-mixable methods', (t) => {
     'should throw on duplicate methods'
   );
 });
-
