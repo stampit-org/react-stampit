@@ -63,28 +63,33 @@ __component.jsx__
 
 ```js
 import stampit from 'react-stampit';
+import * as cache from 'react-stampit/utils/cache';
 
-export default React => stampit(React, {
-  displayName: 'Component',
+const id = cache.uniqueId();
 
-  state: {
-    comp: false,
-    mixin1: false,
-    mixin2: false,
-  },
+export default React => {
+  return cache.find(id) || cache.save(
+    stampit(React, {
+      state: {
+        comp: false,
+        mixin1: false,
+        mixin2: false,
+      },
 
-  _onClick() {
-    return this.state;
-  },
+      _onClick() {
+        return this.state;
+      },
 
-  componentWillMount() {
-    this.state.comp = true;
-  },
+      componentWillMount() {
+        this.state.comp = true;
+      },
 
-  render() {
-    return <input type='button' onClick={() => this._onClick()} />;
-  },
-});
+      render() {
+        return <input type='button' onClick={() => this._onClick()} />;
+      },
+    }), id
+  );
+};
 ```
 
 __app.jsx__
@@ -114,11 +119,15 @@ assert.deepEqual(
   >> ok
 ```
 
-You may have noticed a few interesting behaviors.
+You may have noticed several interesting behaviors.
 
 * component is a factory
 
- By using dependency injection for the React library, we are able to avoid problems caused by multiple instances of React. Read more about that [here](https://medium.com/@dan_abramov/two-weird-tricks-that-fix-react-7cf9bbdef375). This pattern is optional, but recommended.
+ This design pattern is optional, but recommended. Component factories are react-stampit's solution for avoiding the often hard to debug problems created by multiple instances of React. Read more about that [here](https://medium.com/@dan_abramov/two-weird-tricks-that-fix-react-7cf9bbdef375). By injecting the React library, we are able to guarantee the version and instance of React that a component will receive.
+
+* caching
+
+ This goes hand in hand with designing components as factories. Node.js's internal caching will not work as expected for component factories, react-stampit's cache utility can be used as a replacement.
 
 * no autobinding
 

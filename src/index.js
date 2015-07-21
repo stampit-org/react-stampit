@@ -7,13 +7,7 @@ import omit from 'lodash/object/omit';
 import pick from 'lodash/object/pick';
 import stampit from 'stampit';
 
-import {
-  isStamp,
-  stripStamp,
-  isStampCached,
-  cacheStamp,
-  getCachedStamp,
-} from './utils';
+import { isStamp, stripStamp } from './utils';
 
 const dupeFilter = function (prev, next, key, targ) {
   if (targ[key]) {
@@ -119,18 +113,9 @@ function extractStatics(targ, src) {
 function compose(...stamps) {
   let result = stampit(),
       refs = { state: {} },
-      init = [], methods = {}, statics = {},
-      displayName;
+      init = [], methods = {}, statics = {};
 
   if (isStamp(this)) stamps.push(this);
-
-  /*
-   * If stamp has unique displayName and is cached, return it. A composed stamp
-   * should have a unique displayName. Since the compose method overrides with last-in
-   * priority, the expected displayName should be at the end of the chain.
-   */
-  forEach(stamps, stamp => displayName = stamp.displayName || displayName);
-  if (isStampCached(displayName)) return getCachedStamp(displayName);
 
   forEach(stamps, stamp => {
     stamp = !isStamp(stamp) ? rStampit(null, stamp) : stamp; // eslint-disable-line
@@ -151,8 +136,7 @@ function compose(...stamps) {
     .static(statics);
   result.compose = compose;
 
-  // If stamp has unique displayName, cache it.
-  return cacheStamp(stripStamp(result));
+  return stripStamp(result);
 }
 
 /**
@@ -166,7 +150,7 @@ function compose(...stamps) {
  */
 function rStampit(React, props) {
   let stamp = React ? stampit.convertConstructor(React.Component) : stampit();
-  let displayName, refs, methods, statics;
+  let refs, methods, statics;
 
   // Shortcut for converting React's class to a stamp.
   if (isEmpty(props)) {
@@ -174,14 +158,10 @@ function rStampit(React, props) {
     return stripStamp(stamp);
   }
 
-  // If stamp has unique displayName and is cached, return it.
-  displayName = props.displayName || 'ReactStamp';
-  if (isStampCached(displayName)) return getCachedStamp(displayName);
-
   statics = assign({},
     props.statics,
     pick(props, ['contextTypes', 'childContextTypes', 'propTypes', 'defaultProps']),
-    { displayName }
+    { displayName: props.displayName || 'ReactStamp' }
   );
   methods = omit(props, (val, key) => has(statics, key) || ['state', 'statics'].indexOf(key) >= 0);
   refs = props.state && { state: props.state };
@@ -192,8 +172,7 @@ function rStampit(React, props) {
     .static(statics);
   stamp.compose = compose;
 
-  // If stamp has unique displayName, cache it.
-  return cacheStamp(stripStamp(stamp));
+  return stripStamp(stamp);
 }
 
 export default assign(rStampit, { compose, isStamp });
