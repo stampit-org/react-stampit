@@ -1,3 +1,5 @@
+## Composition logic
+
 Stamp composition might be compared to `React.createClass`'s mixin feature. A significant difference is that you compose a stamp without referencing the stamps being inherited from inside the stamp's declaration.
 
 
