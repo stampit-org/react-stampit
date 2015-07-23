@@ -209,24 +209,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	      refs = { state: {} },
 	      init = [],
 	      methods = {},
-	      statics = {},
-	      displayName = undefined;
+	      statics = {};
 
 	  for (var _len = arguments.length, stamps = Array(_len), _key = 0; _key < _len; _key++) {
 	    stamps[_key] = arguments[_key];
 	  }
 
 	  if ((0, _utils.isStamp)(this)) stamps.push(this);
-
-	  /*
-	   * If stamp has unique displayName and is cached, return it. A composed stamp
-	   * should have a unique displayName. Since the compose method overrides with last-in
-	   * priority, the expected displayName should be at the end of the chain.
-	   */
-	  (0, _lodashCollectionForEach2['default'])(stamps, function (stamp) {
-	    return displayName = stamp.displayName || displayName;
-	  });
-	  if ((0, _utils.isStampCached)(displayName)) return (0, _utils.getCachedStamp)(displayName);
 
 	  (0, _lodashCollectionForEach2['default'])(stamps, function (stamp) {
 	    stamp = !(0, _utils.isStamp)(stamp) ? rStampit(null, stamp) : stamp; // eslint-disable-line
@@ -245,8 +234,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  result = result.init(init).refs(refs).methods(methods)['static'](statics);
 	  result.compose = compose;
 
-	  // If stamp has unique displayName, cache it.
-	  return (0, _utils.cacheStamp)((0, _utils.stripStamp)(result));
+	  return (0, _utils.stripStamp)(result);
 	}
 
 	/**
@@ -260,8 +248,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	function rStampit(React, props) {
 	  var stamp = React ? _stampit2['default'].convertConstructor(React.Component) : (0, _stampit2['default'])();
-	  var displayName = undefined,
-	      refs = undefined,
+	  var refs = undefined,
 	      methods = undefined,
 	      statics = undefined;
 
@@ -271,11 +258,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return (0, _utils.stripStamp)(stamp);
 	  }
 
-	  // If stamp has unique displayName and is cached, return it.
-	  displayName = props.displayName || 'ReactStamp';
-	  if ((0, _utils.isStampCached)(displayName)) return (0, _utils.getCachedStamp)(displayName);
-
-	  statics = (0, _lodashObjectAssign2['default'])({}, props.statics, (0, _lodashObjectPick2['default'])(props, ['contextTypes', 'childContextTypes', 'propTypes', 'defaultProps']), { displayName: displayName });
+	  statics = (0, _lodashObjectAssign2['default'])({}, props.statics, (0, _lodashObjectPick2['default'])(props, ['contextTypes', 'childContextTypes', 'propTypes', 'defaultProps']), { displayName: props.displayName || 'ReactStamp' });
 	  methods = (0, _lodashObjectOmit2['default'])(props, function (val, key) {
 	    return (0, _lodashObjectHas2['default'])(statics, key) || ['state', 'statics'].indexOf(key) >= 0;
 	  });
@@ -284,8 +267,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  stamp = stamp.refs(refs).methods(methods)['static'](statics);
 	  stamp.compose = compose;
 
-	  // If stamp has unique displayName, cache it.
-	  return (0, _utils.cacheStamp)((0, _utils.stripStamp)(stamp));
+	  return (0, _utils.stripStamp)(stamp);
 	}
 
 	exports['default'] = (0, _lodashObjectAssign2['default'])(rStampit, { compose: compose, isStamp: _utils.isStamp });
@@ -4349,7 +4331,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 92 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	'use strict';
 
@@ -4358,14 +4340,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 	exports.isStamp = isStamp;
 	exports.stripStamp = stripStamp;
-
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
-
-	function _defaults(obj, defaults) { var keys = Object.getOwnPropertyNames(defaults); for (var i = 0; i < keys.length; i++) { var key = keys[i]; var value = Object.getOwnPropertyDescriptor(defaults, key); if (value && value.configurable && obj[key] === undefined) { Object.defineProperty(obj, key, value); } } return obj; }
-
-	var _cache = __webpack_require__(93);
-
-	_defaults(exports, _interopRequireWildcard(_cache));
 
 	function isStamp(obj) {
 	  return typeof obj === 'function' && typeof obj.compose === 'function' && typeof obj.fixed === 'object';
@@ -4382,38 +4356,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  delete stamp['static'];
 
 	  return stamp;
-	}
-
-/***/ },
-/* 93 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	exports.isStampCached = isStampCached;
-	exports.cacheStamp = cacheStamp;
-	exports.getCachedStamp = getCachedStamp;
-	var cache = {};
-
-	function isStampCached(identifier) {
-	  return identifier && cache.hasOwnProperty(identifier);
-	}
-
-	function cacheStamp(stamp) {
-	  var displayName = stamp.displayName;
-
-	  if (displayName && displayName !== 'ReactStamp') {
-	    cache[displayName] = stamp;
-	  }
-
-	  return stamp;
-	}
-
-	function getCachedStamp(identifier) {
-	  return cache[identifier];
 	}
 
 /***/ }
