@@ -4,6 +4,7 @@ import test from 'tape';
 
 import stampit from '../src';
 import stamp from '../src/utils/decorator';
+import * as cache from '../src/utils/cache';
 
 test('stamp decorator', (t) => {
   t.plan(4);
@@ -51,43 +52,33 @@ test('stamp decorator', (t) => {
   /* eslint-enable new-cap */
 });
 
-test('stamp factory', (t) => {
-  t.plan(4);
+test('stamp factory using `cacheStamp`', (t) => {
+  t.plan(2);
 
-  const stampFactory1 = React => stampit(React, {
-    displayName: 'Component',
-  });
+  const id1 = cache.uniqueId();
+  const id2 = cache.uniqueId();
 
-  const stampFactory2 = React => stampit(React, {
-    displayName: 'ReactStamp',
-  });
+  const stampFactory1 = React => {
+    return cache.find(id1) || cache.save(
+      stampit(React, {
+        displayName: 'Component',
+      }), id1
+    );
+  };
 
-  const stamp1 = stampFactory1(React);
-  const stamp2 = stampFactory1(React);
-  const stamp3 = stampFactory2(React);
-  const stamp4 = stampFactory2(React);
-  const composedStamp1 = stampit.compose(stamp1, { displayName: 'ComposedStamp1' });
-  const composedStamp2 = stampit.compose(stamp1, { displayName: 'ComposedStamp1' });
-  const composedStamp3 = stampit.compose(stamp1, { displayName: 'ReactStamp' });
-  const composedStamp4 = stampit.compose(stamp1, { displayName: 'ReactStamp' });
+  const stampFactory2 = React => {
+    return cache.find(id2) || cache.save(
+      stampit(React)
+    );
+  };
 
   t.equal(
-    stamp1, stamp2,
-    'is memoized when displayName prop !== \'ReactStamp\''
+    stampFactory1(React), stampFactory1(React),
+    'is memoized if unique id is defined'
   );
 
   t.notEqual(
-    stamp3, stamp4,
-    'is not memoized when displayName prop == \'ReactStamp\''
-  );
-
-  t.equal(
-    composedStamp1, composedStamp2,
-    'is memoized in composition when displayName prop !== \'ReactStamp\''
-  );
-
-  t.notEqual(
-    composedStamp3, composedStamp4,
-    'is not memoized in composition when displayName prop == \'ReactStamp\''
+    stampFactory2(React), stampFactory2(React),
+    'is not memoized if unique id is undefined'
   );
 });

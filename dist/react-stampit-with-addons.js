@@ -54,7 +54,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(94);
+	module.exports = __webpack_require__(93);
 
 
 /***/ },
@@ -209,24 +209,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	      refs = { state: {} },
 	      init = [],
 	      methods = {},
-	      statics = {},
-	      displayName = undefined;
+	      statics = {};
 
 	  for (var _len = arguments.length, stamps = Array(_len), _key = 0; _key < _len; _key++) {
 	    stamps[_key] = arguments[_key];
 	  }
 
 	  if ((0, _utils.isStamp)(this)) stamps.push(this);
-
-	  /*
-	   * If stamp has unique displayName and is cached, return it. A composed stamp
-	   * should have a unique displayName. Since the compose method overrides with last-in
-	   * priority, the expected displayName should be at the end of the chain.
-	   */
-	  (0, _lodashCollectionForEach2['default'])(stamps, function (stamp) {
-	    return displayName = stamp.displayName || displayName;
-	  });
-	  if ((0, _utils.isStampCached)(displayName)) return (0, _utils.getCachedStamp)(displayName);
 
 	  (0, _lodashCollectionForEach2['default'])(stamps, function (stamp) {
 	    stamp = !(0, _utils.isStamp)(stamp) ? rStampit(null, stamp) : stamp; // eslint-disable-line
@@ -245,8 +234,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  result = result.init(init).refs(refs).methods(methods)['static'](statics);
 	  result.compose = compose;
 
-	  // If stamp has unique displayName, cache it.
-	  return (0, _utils.cacheStamp)((0, _utils.stripStamp)(result));
+	  return (0, _utils.stripStamp)(result);
 	}
 
 	/**
@@ -260,8 +248,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	function rStampit(React, props) {
 	  var stamp = React ? _stampit2['default'].convertConstructor(React.Component) : (0, _stampit2['default'])();
-	  var displayName = undefined,
-	      refs = undefined,
+	  var refs = undefined,
 	      methods = undefined,
 	      statics = undefined;
 
@@ -271,11 +258,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return (0, _utils.stripStamp)(stamp);
 	  }
 
-	  // If stamp has unique displayName and is cached, return it.
-	  displayName = props.displayName || 'ReactStamp';
-	  if ((0, _utils.isStampCached)(displayName)) return (0, _utils.getCachedStamp)(displayName);
-
-	  statics = (0, _lodashObjectAssign2['default'])({}, props.statics, (0, _lodashObjectPick2['default'])(props, ['contextTypes', 'childContextTypes', 'propTypes', 'defaultProps']), { displayName: displayName });
+	  statics = (0, _lodashObjectAssign2['default'])({}, props.statics, (0, _lodashObjectPick2['default'])(props, ['contextTypes', 'childContextTypes', 'propTypes', 'defaultProps']), { displayName: props.displayName || 'ReactStamp' });
 	  methods = (0, _lodashObjectOmit2['default'])(props, function (val, key) {
 	    return (0, _lodashObjectHas2['default'])(statics, key) || ['state', 'statics'].indexOf(key) >= 0;
 	  });
@@ -284,8 +267,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  stamp = stamp.refs(refs).methods(methods)['static'](statics);
 	  stamp.compose = compose;
 
-	  // If stamp has unique displayName, cache it.
-	  return (0, _utils.cacheStamp)((0, _utils.stripStamp)(stamp));
+	  return (0, _utils.stripStamp)(stamp);
 	}
 
 	exports['default'] = (0, _lodashObjectAssign2['default'])(rStampit, { compose: compose, isStamp: _utils.isStamp });
@@ -4349,7 +4331,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 92 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	'use strict';
 
@@ -4358,14 +4340,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 	exports.isStamp = isStamp;
 	exports.stripStamp = stripStamp;
-
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
-
-	function _defaults(obj, defaults) { var keys = Object.getOwnPropertyNames(defaults); for (var i = 0; i < keys.length; i++) { var key = keys[i]; var value = Object.getOwnPropertyDescriptor(defaults, key); if (value && value.configurable && obj[key] === undefined) { Object.defineProperty(obj, key, value); } } return obj; }
-
-	var _cache = __webpack_require__(93);
-
-	_defaults(exports, _interopRequireWildcard(_cache));
 
 	function isStamp(obj) {
 	  return typeof obj === 'function' && typeof obj.compose === 'function' && typeof obj.fixed === 'object';
@@ -4386,35 +4360,37 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 93 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
-	exports.isStampCached = isStampCached;
-	exports.cacheStamp = cacheStamp;
-	exports.getCachedStamp = getCachedStamp;
-	var cache = {};
 
-	function isStampCached(identifier) {
-	  return identifier && cache.hasOwnProperty(identifier);
-	}
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
-	function cacheStamp(stamp) {
-	  var displayName = stamp.displayName;
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	  if (displayName && displayName !== 'ReactStamp') {
-	    cache[displayName] = stamp;
-	  }
+	var _ = __webpack_require__(1);
 
-	  return stamp;
-	}
+	var _2 = _interopRequireDefault(_);
 
-	function getCachedStamp(identifier) {
-	  return cache[identifier];
-	}
+	var _utilsCache = __webpack_require__(94);
+
+	var cache = _interopRequireWildcard(_utilsCache);
+
+	var _utilsDecorator = __webpack_require__(96);
+
+	var _utilsDecorator2 = _interopRequireDefault(_utilsDecorator);
+
+	_2['default'].addons = {
+	  cache: cache,
+	  decorator: _utilsDecorator2['default']
+	};
+
+	exports['default'] = _2['default'];
+	module.exports = exports['default'];
 
 /***/ },
 /* 94 */
@@ -4425,26 +4401,65 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
+	exports.find = find;
+	exports.save = save;
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _ = __webpack_require__(1);
+	var _lodashUtilityUniqueId = __webpack_require__(95);
 
-	var _2 = _interopRequireDefault(_);
+	var _lodashUtilityUniqueId2 = _interopRequireDefault(_lodashUtilityUniqueId);
 
-	var _utilsDecorator = __webpack_require__(95);
+	var cache = {};
 
-	var _utilsDecorator2 = _interopRequireDefault(_utilsDecorator);
+	function find(id) {
+	  return cache[id];
+	}
 
-	_2['default'].addons = {
-	  decorator: _utilsDecorator2['default']
-	};
+	function save(val, id) {
+	  if (id) cache[id] = val;
 
-	exports['default'] = _2['default'];
-	module.exports = exports['default'];
+	  return val;
+	}
+
+	exports.uniqueId = _lodashUtilityUniqueId2['default'];
 
 /***/ },
 /* 95 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var baseToString = __webpack_require__(41);
+
+	/** Used to generate unique IDs. */
+	var idCounter = 0;
+
+	/**
+	 * Generates a unique ID. If `prefix` is provided the ID is appended to it.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Utility
+	 * @param {string} [prefix] The value to prefix the ID with.
+	 * @returns {string} Returns the unique ID.
+	 * @example
+	 *
+	 * _.uniqueId('contact_');
+	 * // => 'contact_104'
+	 *
+	 * _.uniqueId();
+	 * // => '105'
+	 */
+	function uniqueId(prefix) {
+	  var id = ++idCounter;
+	  return baseToString(prefix) + id;
+	}
+
+	module.exports = uniqueId;
+
+/***/ },
+/* 96 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4460,7 +4475,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _lodashObjectAssign2 = _interopRequireDefault(_lodashObjectAssign);
 
-	var _lodashObjectMerge = __webpack_require__(96);
+	var _lodashObjectMerge = __webpack_require__(97);
 
 	var _lodashObjectMerge2 = _interopRequireDefault(_lodashObjectMerge);
 
@@ -4523,12 +4538,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 96 */
+/* 97 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var baseMerge = __webpack_require__(97),
+	var baseMerge = __webpack_require__(98),
 	    createAssigner = __webpack_require__(21);
 
 	/**
@@ -4584,13 +4599,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = merge;
 
 /***/ },
-/* 97 */
+/* 98 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var arrayEach = __webpack_require__(27),
-	    baseMergeDeep = __webpack_require__(98),
+	    baseMergeDeep = __webpack_require__(99),
 	    isArray = __webpack_require__(16),
 	    isArrayLike = __webpack_require__(10),
 	    isObject = __webpack_require__(8),
@@ -4645,7 +4660,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = baseMerge;
 
 /***/ },
-/* 98 */
+/* 99 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4654,9 +4669,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    isArguments = __webpack_require__(15),
 	    isArray = __webpack_require__(16),
 	    isArrayLike = __webpack_require__(10),
-	    isPlainObject = __webpack_require__(99),
+	    isPlainObject = __webpack_require__(100),
 	    isTypedArray = __webpack_require__(55),
-	    toPlainObject = __webpack_require__(100);
+	    toPlainObject = __webpack_require__(101);
 
 	/**
 	 * A specialized version of `baseMerge` for arrays and objects which performs
@@ -4713,7 +4728,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = baseMergeDeep;
 
 /***/ },
-/* 99 */
+/* 100 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4790,7 +4805,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = isPlainObject;
 
 /***/ },
-/* 100 */
+/* 101 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

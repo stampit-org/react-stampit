@@ -1,5 +1,3 @@
-export * from './cache';
-
 export function isStamp(obj) {
   return (
     typeof obj === 'function' &&
