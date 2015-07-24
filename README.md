@@ -4,7 +4,7 @@
 
 > A specialized [stampit](https://github.com/stampit-org/stampit) factory for [React](https://github.com/facebook/react).
 
-Create React components in a way analogous to `React.createClass`, but powered by a [subset](#api-differences) of the [stampit](https://github.com/stampit-org/stampit) API.
+Create React components in a way analogous to `React.createClass`, but powered by a [subset](docs/api.md#api-differences) of the [stampit](https://github.com/stampit-org/stampit) API.
 
 ## Install
 
@@ -18,12 +18,12 @@ or by [downloading the latest release](https://github.com/stampit-org/react-stam
 
 ## What is this
 
-This library is the result of wondering about what other ways a React component could be represented. [Stamps](https://en.wikipedia.org/wiki/Stamp_%28object-oriented_programming%29) are a cool concept, and more importantly have proven to be a great alternative to `React.createClass` and the ES6 `class` due to their flexibility and use of multiple kinds of prototypal inheritance.
+This library is the result of wondering about what other ways a React component could be represented. [Stamps](https://github.com/stampit-org/stampit#what-is-a-stamp) are a cool concept, and more importantly have proven to be a great alternative to `React.createClass` and the ES6 `class` due to their flexibility and use of multiple kinds of prototypal inheritance.
 
-react-stampit has an API similar to `React.createClass`. The factory accepts two parameters, the first being the React library and the second being an object comprised of React component properties.
+react-stampit has an API similar to `React.createClass`. The factory accepts two parameters, the React library and a description object.
 
 ```js
-const component = stampit(React, {
+stampit(React, {
   state: {},
   statics: {},
 
@@ -37,7 +37,7 @@ const component = stampit(React, {
 });
 ```
 
-The best part about [stamps](https://en.wikipedia.org/wiki/Stamp_%28object-oriented_programming%29) is their composability. What this means is that `n` number of stamps can be combined into a new stamp which inherits each passed stamp's behavior. This is perfect for React, since `class` is being pushed as the new norm and does not provide an idiomatic way to use mixins. (classical inheritance :disappointed:). While stamp composability on the surface is not idiomatic, the conventions used underneath are; it is these conventions that provide a limitless way to extend any React component.
+The best part about [stamps](https://github.com/stampit-org/stampit#what-is-a-stamp) is their composability. What this means is that `n` number of stamps can be combined into a new stamp which inherits each passed stamp's behavior. This is perfect for React, since `class` is being pushed as the new norm and does not provide an idiomatic way to use mixins. (classical inheritance :disappointed:). While stamp composability on the surface is not idiomatic, the conventions used underneath are; it is these conventions that provide a limitless way to extend any React component.
 
 __mixin1.jsx__
 
