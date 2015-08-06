@@ -24,6 +24,7 @@ react-stampit has an API similar to `React.createClass`. The factory accepts two
 
 ```js
 stampit(React, {
+  init: [],
   state: {},
   statics: {},
 
