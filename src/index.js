@@ -150,7 +150,7 @@ function compose(...stamps) {
  */
 function rStampit(React, props) {
   let stamp = React ? stampit.convertConstructor(React.Component) : stampit();
-  let refs, methods, statics;
+  let refs, init, methods, statics;
 
   // Shortcut for converting React's class to a stamp.
   if (isEmpty(props)) {
@@ -158,15 +158,17 @@ function rStampit(React, props) {
     return stripStamp(stamp);
   }
 
+  init = props.init || [];
+  refs = props.state && { state: props.state } || {};
   statics = assign({},
     props.statics,
     pick(props, ['contextTypes', 'childContextTypes', 'propTypes', 'defaultProps']),
     { displayName: props.displayName || 'ReactStamp' }
   );
-  methods = omit(props, (val, key) => has(statics, key) || ['state', 'statics'].indexOf(key) >= 0);
-  refs = props.state && { state: props.state };
+  methods = omit(props, (val, key) => has(statics, key) || ['init', 'state', 'statics'].indexOf(key) >= 0);
 
   stamp = stamp
+    .init(init)
     .refs(refs)
     .methods(methods)
     .static(statics);
