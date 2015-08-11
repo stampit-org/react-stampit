@@ -2,8 +2,7 @@ import assign from 'lodash/object/assign';
 import merge from 'lodash/object/merge';
 import stampit from 'stampit';
 
-import { compose } from '../';
-import { stripStamp } from './';
+import { compose, stripStamp } from './';
 
 /**
  * Get object of non-enum properties

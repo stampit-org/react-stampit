@@ -2,6 +2,7 @@ import React from 'react/addons';
 import test from 'tape';
 
 import stampit from '../src';
+import { isStamp } from '../src/utils';
 
 const TestUtils = React.addons.TestUtils;
 
@@ -9,7 +10,7 @@ test('stampit()', (t) => {
   t.plan(1);
 
   t.ok(
-    stampit.isStamp(stampit()),
+    isStamp(stampit()),
     'should return a stamp'
   );
 });
@@ -20,7 +21,7 @@ test('stampit(React, props)', (t) => {
   const stamp = stampit(React, {});
 
   t.ok(
-    stampit.isStamp(stamp),
+    isStamp(stamp),
     'should return a stamp'
   );
 });
@@ -31,7 +32,7 @@ test('stampit(React)', (t) => {
   const stamp = stampit(React);
 
   t.ok(
-    stampit.isStamp(stamp),
+    isStamp(stamp),
     'should return a stamp'
   );
 });
@@ -42,7 +43,7 @@ test('stampit(null, props)', (t) => {
   const stamp = stampit(null, {});
 
   t.ok(
-    stampit.isStamp(stamp),
+    isStamp(stamp),
     'should return a stamp'
   );
 });
@@ -65,15 +66,6 @@ test('stampit(React, props).compose', (t) => {
 
   t.equal(
     typeof stampit(React).compose, 'function',
-    'should be a function'
-  );
-});
-
-test('stampit.compose', (t) => {
-  t.plan(1);
-
-  t.equal(
-    typeof stampit.compose, 'function',
     'should be a function'
   );
 });

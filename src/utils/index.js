@@ -1,3 +1,6 @@
+import compose from './compose';
+import stamp from './decorator';
+
 export function isStamp(obj) {
   return (
     typeof obj === 'function' &&
@@ -18,3 +21,8 @@ export function stripStamp(stamp) {
 
   return stamp;
 }
+
+export {
+  compose,
+  stamp,
+};

@@ -1,10 +1,12 @@
 import stampit from './';
 import * as cache from './utils/cache';
-import decorator from './utils/decorator';
+import { compose, isStamp, stamp } from './utils';
 
 stampit.addons = {
   cache,
-  decorator,
+  compose,
+  isStamp,
+  stamp,
 };
 
 export default stampit;
