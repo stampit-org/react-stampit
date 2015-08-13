@@ -1,8 +1,8 @@
 import rewire from 'rewire';
 import test from 'tape';
 
-let stampit = rewire('../src');
-let wrapMethods = stampit.__get__('wrapMethods');
+let compose = rewire('../src/utils/compose');
+let wrapMethods = compose.__get__('wrapMethods');
 
 test('wrapMethods(targ, src)', (t) => {
   t.plan(7);

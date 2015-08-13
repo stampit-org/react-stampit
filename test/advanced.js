@@ -3,7 +3,7 @@ import React from 'react';
 import test from 'tape';
 
 import stampit from '../src';
-import stamp from '../src/utils/decorator';
+import { isStamp, stamp } from '../src/utils';
 import * as cache from '../src/utils/cache';
 
 test('stamp decorator', (t) => {
@@ -38,7 +38,7 @@ test('stamp decorator', (t) => {
     },
   };
 
-  t.ok(stampit.isStamp(Component), 'converts class to stamp');
+  t.ok(isStamp(Component), 'converts class to stamp');
   /* eslint-disable new-cap */
   t.ok(Component().render, 'maps methods');
   t.deepEqual(

@@ -3,6 +3,7 @@ import React from 'react';
 import test from 'tape';
 
 import stampit from '../src';
+import { compose } from '../src/utils';
 
 test('stampit(React, props).compose(stamp2)', (t) => {
   t.plan(1);
@@ -72,7 +73,7 @@ test('stampit(React, props).compose(stamp2, stamp3)', (t) => {
   );
 });
 
-test('stampit.compose(stamp2, stamp1)', (t) => {
+test('compose(stamp2, stamp1)', (t) => {
   t.plan(1);
 
   const mixin = stampit(null, {
@@ -84,7 +85,7 @@ test('stampit.compose(stamp2, stamp1)', (t) => {
   const stamp = stampit(React);
 
   t.equal(
-    stampit.compose(mixin, stamp)().method(), 'mixin',
+    compose(mixin, stamp)().method(), 'mixin',
     'should return a stamp composed of passed stamps'
   );
 });
