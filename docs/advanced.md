@@ -53,4 +53,4 @@ assert.deepEqual(
   >> ok
 ```
 
-__*Warning: Class decorators are a proposal for ES7, they are not set in stone.*__
+__*Warning: Class decorators are a proposal for ES2016, they are not set in stone.*__
