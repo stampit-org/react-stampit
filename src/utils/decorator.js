@@ -37,7 +37,7 @@ function getEnum(target) {
 }
 
 /**
- * ES7 decorator for converting ES6 class to stamp
+ * ES2016 decorator for converting ES2015 class to stamp
  */
 export default function stamp(Class) {
   const constructor = function() {

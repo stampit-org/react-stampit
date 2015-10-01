@@ -18,7 +18,7 @@ or by [downloading the latest release](https://github.com/stampit-org/react-stam
 
 ## What is this
 
-This library is the result of wondering about what other ways a React component could be represented. [Stamps](https://github.com/stampit-org/stampit#what-is-a-stamp) are a cool concept, and more importantly have proven to be a great alternative to `React.createClass` and the ES6 `class` due to their flexibility and use of multiple kinds of prototypal inheritance.
+This library is the result of wondering about what other ways a React component could be represented. [Stamps](https://github.com/stampit-org/stampit#what-is-a-stamp) are a cool concept, and more importantly have proven to be a great alternative to `React.createClass` and the ES2015 `class` due to their flexibility and use of multiple kinds of prototypal inheritance.
 
 react-stampit has an API similar to `React.createClass`. The factory accepts two parameters, the React library and a description object.
 
@@ -132,7 +132,7 @@ You may have noticed several interesting behaviors.
 
 * no autobinding
 
- Event handlers require explicit binding. No magic. This can be done using `.bind` or through lexical binding with ES6 [arrow functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions) as shown in the example.
+ Event handlers require explicit binding. No magic. This can be done using `.bind` or through lexical binding with ES2015 [arrow functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions) as shown in the example.
 * no `call super`
 
  React methods are wrapped during composition, providing functional inheritance. Sweet.
