@@ -6,6 +6,8 @@
 
 Create React components in a way analogous to `React.createClass`, but powered by a [subset](docs/api.md#api-differences) of the [stampit](https://github.com/stampit-org/stampit) API.
 
+**This library has been replaced by [react-stamp](https://github.com/stampit-org/react-stamp).**
+
 ## Install
 
 react-stampit can be [installed via npm](https://www.npmjs.com/package/react-stampit)
