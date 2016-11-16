@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/stampit-org/react-stampit.svg)](https://travis-ci.org/stampit-org/react-stampit)
+[![Build Status](https://travis-ci.org/stampit-org/react-stampit.svg)](https://travis-ci.org/stampit-org/react-stampit)![Greenkeeper Badge](https://badges.greenkeeper.io/stampit-org/react-stampit.svg)
 
 # react-stampit
 
